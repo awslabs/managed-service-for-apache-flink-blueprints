@@ -1,0 +1,18 @@
+[
+    {
+      "PropertyGroupId": "kinesis.analytics.flink.run.options",
+      "PropertyMap": {
+        "python": "pyflink-app.py",
+        "jarfile": "lib/uber-jar-for-pyflink-1.0.1.jar"
+      }
+    },
+    {
+      "PropertyGroupId": "BlueprintMetadata",
+      "PropertyMap": {
+        "source.bootstrap_servers": "servers",
+        "source.topic": "sourceTopic",
+        "source.format": "json",
+        "sink.path": "s3://mys3sinkbucket"
+      }
+    }
+  ]

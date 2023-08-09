@@ -1,0 +1,4 @@
+configs/
+update.sh
+zip-and-copy.sh
+*.zip

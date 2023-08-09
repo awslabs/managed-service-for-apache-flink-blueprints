@@ -1,0 +1,508 @@
+﻿{
+  "paragraphs": [
+    {
+      "title": "Setup Admin Client (MSK IAM)",
+      "text": "%flink\n\nimport org.apache.kafka.clients.admin.AdminClient\nimport org.apache.kafka.clients.admin.AdminClientConfig\nimport java.util.Properties\n\n// replace with your brokers, etc...\nval bootstrapServers : String = \"boot-jh3g3srn.c3.kafka-serverless.us-east-2.amazonaws.com:9098\"\nvar config = new Properties()\nconfig.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)\nconfig.put(\"security.protocol\", \"SASL_SSL\")\nconfig.put(\"sasl.mechanism\", \"AWS_MSK_IAM\")\nconfig.put(\"sasl.jaas.config\", \"software.amazon.msk.auth.iam.IAMLoginModule required;\")\nconfig.put(\"sasl.client.callback.handler.class\", \"software.amazon.msk.auth.iam.IAMClientCallbackHandler\")\nvar admin = AdminClient.create(config)\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T13:58:07+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_68695676",
+      "id": "paragraph_1667742201361_1031596585",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:7854",
+      "dateFinished": "2022-11-06T13:58:12+0000",
+      "dateStarted": "2022-11-06T13:58:07+0000",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.kafka.clients.admin.AdminClient\nimport org.apache.kafka.clients.admin.AdminClientConfig\nimport java.util.Properties\n\u001b[1m\u001b[34mbootstrapServers\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = boot-jh3g3srn.c3.kafka-serverless.us-east-2.amazonaws.com:9098\n\u001b[1m\u001b[34mconfig\u001b[0m: \u001b[1m\u001b[32mjava.util.Properties\u001b[0m = {}\n\u001b[1m\u001b[34mres51\u001b[0m: \u001b[1m\u001b[32mObject\u001b[0m = null\n\u001b[1m\u001b[34mres52\u001b[0m: \u001b[1m\u001b[32mObject\u001b[0m = null\n\u001b[1m\u001b[34mres53\u001b[0m: \u001b[1m\u001b[32mObject\u001b[0m = null\n\u001b[1m\u001b[34mres54\u001b[0m: \u001b[1m\u001b[32mObject\u001b[0m = null\n\u001b[1m\u001b[34mres55\u001b[0m: \u001b[1m\u001b[32mObject\u001b[0m = null\n\u001b[1m\u001b[34madmin\u001b[0m: \u001b[1m\u001b[32morg.apache.kafka.clients.admin.AdminClient\u001b[0m = org.apache.kafka.clients.admin.KafkaAdminClient@27751487\n"
+          }
+        ]
+      }
+    },
+    {
+      "title": "List Kafka topics (MSK IAM)",
+      "text": "%flink\n\n// list topics\nvar topicListing = admin.listTopics().listings().get()",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:04:48+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mtopicListing\u001b[0m: \u001b[1m\u001b[32mjava.util.Collection[org.apache.kafka.clients.admin.TopicListing]\u001b[0m = [(name=DatagenJsonTopic, internal=false), (name=AmznReviewsTopic, internal=false), (name=DatagenTopic, internal=false), (name=DatagenJsonTopic3, internal=false), (name=MyOrdersTopic, internal=false)]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_202173882",
+      "id": "paragraph_1666629519846_1573524059",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:7855",
+      "dateFinished": "2022-11-06T14:04:51+0000",
+      "dateStarted": "2022-11-06T14:04:48+0000"
+    },
+    {
+      "title": "Create Kafka topic (MSK IAM)",
+      "text": "%flink\n\nimport org.apache.kafka.clients.admin.NewTopic\n\n// 3 partitions and replication factor of 1\nvar newTopic = new NewTopic(\"MyOrdersTopic\", 3, 1.toShort);\nadmin.createTopics(Collections.singleton(newTopic));",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:05:31+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.kafka.clients.admin.NewTopic\n\u001b[1m\u001b[34mnewTopic\u001b[0m: \u001b[1m\u001b[32morg.apache.kafka.clients.admin.NewTopic\u001b[0m = (name=MyOrdersTopic, numPartitions=3, replicationFactor=1, replicasAssignments=null, configs=null)\n\u001b[1m\u001b[34mres71\u001b[0m: \u001b[1m\u001b[32morg.apache.kafka.clients.admin.CreateTopicsResult\u001b[0m = org.apache.kafka.clients.admin.CreateTopicsResult@901f006\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_822944856",
+      "id": "paragraph_1666694457623_1831978889",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:7856",
+      "dateFinished": "2022-11-06T14:05:34+0000",
+      "dateStarted": "2022-11-06T14:05:31+0000"
+    },
+    {
+      "text": "%flink\n\nadmin.deleteTopics(Collections.singleton(\"DatagenJsonTopic2\"))",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:05:29+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667743366431_1113802377",
+      "id": "paragraph_1667743366431_1113802377",
+      "dateCreated": "2022-11-06T14:02:46+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:16435",
+      "dateFinished": "2022-11-06T14:05:22+0000",
+      "dateStarted": "2022-11-06T14:05:19+0000",
+      "title": "Remove Kafka topic (MSK IAM)",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres68\u001b[0m: \u001b[1m\u001b[32morg.apache.kafka.clients.admin.DeleteTopicsResult\u001b[0m = org.apache.kafka.clients.admin.DeleteTopicsResult@581cf318\n"
+          }
+        ]
+      }
+    },
+    {
+      "title": "Create Datagen Table",
+      "text": "%flink.ssql\n\nDROP TABLE IF EXISTS orders_datagen_source;\n\nCREATE TABLE orders_datagen_source (\n    product_id   BIGINT,\n    order_number BIGINT,\n    quantity     INT,\n    price_int    INT,\n    price        AS CAST(price_int/100.0 AS DECIMAL(32, 2)),\n    buyer        STRING,\n    order_time   TIMESTAMP(3)\n)\nWITH (\n    'connector'= 'datagen',\n    'fields.product_id.min' = '1',\n    'fields.product_id.max' = '99999',\n    'fields.quantity.min' = '1',\n    'fields.quantity.max' = '25',\n    'fields.price_int.min' = '29',\n    'fields.price_int.max' = '99999999',\n    'fields.order_number.min' = '1',\n    'fields.order_number.max' = '9999999999',\n    'fields.buyer.length' = '15'\n);\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:06:53+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_1024108911",
+      "id": "paragraph_1666989444890_34652964",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:7857",
+      "dateFinished": "2022-11-06T14:06:57+0000",
+      "dateStarted": "2022-11-06T14:06:53+0000"
+    },
+    {
+      "text": "%flink.ssql\n\nDROP TABLE IF EXISTS orders_msk;\n\nCREATE TABLE orders_msk (\n    product_id   BIGINT,\n    order_number BIGINT,\n    quantity     INT,\n    price        DECIMAL(32, 2),\n    buyer        STRING,\n    order_time   TIMESTAMP(3)\n)\nWITH (\n    'connector'= 'kafka',\n    'topic' = 'MyOrdersTopic',\n    'format' = 'json',\n    'scan.startup.mode' = 'earliest-offset',\n    'properties.bootstrap.servers' = 'boot-jh3g3srn.c3.kafka-serverless.us-east-2.amazonaws.com:9098',\n    'properties.security.protocol' = 'SASL_SSL',\n    'properties.sasl.mechanism' = 'AWS_MSK_IAM',\n    'properties.sasl.jaas.config' = 'software.amazon.msk.auth.iam.IAMLoginModule required;',\n    'properties.sasl.client.callback.handler.class' = 'software.amazon.msk.auth.iam.IAMClientCallbackHandler'\n);\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:06:59+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742521494_1062108344",
+      "id": "paragraph_1667742521494_1062108344",
+      "dateCreated": "2022-11-06T13:48:41+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:9941",
+      "dateFinished": "2022-11-06T14:07:03+0000",
+      "dateStarted": "2022-11-06T14:06:59+0000",
+      "title": "Create MSK Table (sink in this case, where the generated data will be sent)",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%flink.pyflink\n\ns_env.disable_operator_chaining()\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T13:59:53+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "<pyflink.datastream.stream_execution_environment.StreamExecutionEnvironment at 0x7f1ffd17d580>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_1044014207",
+      "id": "paragraph_1667421379456_1773532933",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:7860",
+      "dateFinished": "2022-11-06T13:59:57+0000",
+      "dateStarted": "2022-11-06T13:59:53+0000",
+      "title": "Disable operator chaining (not recommended for prod)"
+    },
+    {
+      "title": "Insert into MSK orders table from datagen source",
+      "text": "%flink.ssql(parallelism=2)\n\nINSERT INTO orders_msk\nSELECT \n    product_id,\n    order_number,\n    quantity,\n    price,\n    buyer,\n    order_time\nFROM orders_datagen_source;",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:07:09+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "/flinkdashboard/#/job/f8321a377973c7104362313ebfafe2d2",
+              "$$hashKey": "object:25885"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_1859841227",
+      "id": "paragraph_1666990113360_267836874",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:7861",
+      "dateFinished": "2022-11-06T14:09:08+0000",
+      "dateStarted": "2022-11-06T14:07:09+0000",
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: INSERT INTO orders_msk\nSELECT \n    product_id,\n    order_number,\n    quantity,\n    price,\n    buyer,\n    order_time\nFROM orders_datagen_source\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": "<div class='container ng-scope' style='padding-left:0px;padding-right:0px;'>\n    <div class='panel panel-danger'>\n        <div class='panel-heading' ng-click='isOpen=!isOpen' ng-init='isOpen=false' style=\"cursor:pointer\">\n            <div class='plainTextContainer' style='font-weight:bolder'><i class=\"fa fa-caret-right fa-fw\" style=\"padding-right:7px;transition:all 0.3s;{{isOpen?'transform:rotate(90deg);transform-origin:25% 45%':''}}\"></i>Job was cancelled.</div>\n        </div>\n        <div class='panel-collapse' uib-collapse='!isOpen'>\n            <div class='text' style='max-height:300px;overflow:auto;padding:10px'>java.io.IOException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: f8321a377973c7104362313ebfafe2d2)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callInsertInto(FlinkSqlInterrpeter.java:538)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInsertInto(FlinkStreamSqlInterpreter.java:97)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:273)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:160)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:112)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:852)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:829)\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: f8321a377973c7104362313ebfafe2d2)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:125)\n\tat java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$24(RestClusterClient.java:670)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:610)\n\tat java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1085)\n\tat java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:478)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:146)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:123)\n\t... 23 more\n</div>\n        </div>\n    </div>\n</div>\n"
+          }
+        ]
+      }
+    },
+    {
+      "title": "Select from MSK Orders table",
+      "text": "%flink.ssql(type=update, parallelism=2)\n\nselect * from orders_msk;",
+      "user": "anonymous",
+      "dateUpdated": "2022-11-06T14:09:29+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "order_number": "string",
+                      "price": "string",
+                      "buyer": "string",
+                      "order_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          },
+          "2": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {}
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: select * from orders_msk\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": "<div class='container ng-scope' style='padding-left:0px;padding-right:0px;'>\n    <div class='panel panel-danger'>\n        <div class='panel-heading' ng-click='isOpen=!isOpen' ng-init='isOpen=false' style=\"cursor:pointer\">\n            <div class='plainTextContainer' style='font-weight:bolder'><i class=\"fa fa-caret-right fa-fw\" style=\"padding-right:7px;transition:all 0.3s;{{isOpen?'transform:rotate(90deg);transform-origin:25% 45%':''}}\"></i>Job was cancelled.</div>\n        </div>\n        <div class='panel-collapse' uib-collapse='!isOpen'>\n            <div class='text' style='max-height:300px;overflow:auto;padding:10px'>java.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:172)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:105)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:503)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:266)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:160)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:112)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:852)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:829)\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: a1197cb64f50a9d697bfe29ade32d822)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:125)\n\tat java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$24(RestClusterClient.java:670)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:394)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:610)\n\tat java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1085)\n\tat java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:478)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:146)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:123)\n\t... 23 more\n</div>\n        </div>\n    </div>\n</div>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "/flinkdashboard/#/job/a1197cb64f50a9d697bfe29ade32d822",
+              "$$hashKey": "object:28413"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1667742252271_279514573",
+      "id": "paragraph_1666990619820_1521219248",
+      "dateCreated": "2022-11-06T13:44:12+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:7862",
+      "dateFinished": "2022-11-06T14:09:28+0000",
+      "dateStarted": "2022-11-06T14:08:20+0000"
+    }
+  ],
+  "name": "msk-iam-datagen",
+  "id": "2HHZV736J",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/msk-iam-datagen"
+}
