@@ -78,7 +78,7 @@ cachetools==4.1.0
 cattrs==1.1.1
 # Editable Git install with no remote (cdk-python==0.0.1)
 -e /Users/buddhiks/Documents/repos/cdk-python/cdk_python
-certifi==2020.4.5.2
+certifi==2023.7.22
 cfn-lint==0.72.10
 cfn-lint-serverless==0.3.2
 cfnresponse==1.1.2
