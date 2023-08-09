@@ -124,7 +124,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.3
 jinja2-time==0.2.0
 jmespath==0.10.0
-joblib==0.17.0
+joblib==1.2.0
 jschema-to-python==1.2.3
 jsii==1.21.0
 jsonpatch==1.32
