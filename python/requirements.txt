@@ -99,7 +99,7 @@ elasticsearch==7.9.1
 execnet==1.7.1
 filelock==3.0.12
 flake8==3.8.3
-Flask==1.1.2
+Flask==2.2.5
 Flask-RESTful==0.3.8
 future==0.18.2
 gast==0.3.3
