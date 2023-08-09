@@ -159,7 +159,7 @@ Pillow==8.0.1
 pip-tools==6.12.1
 pipenv==2020.11.15
 pipfile==0.0.2
-pipreqs==0.4.10
+pipreqs==0.4.12
 pluggy==0.13.1
 poyo==0.5.0
 protobuf==3.12.2
