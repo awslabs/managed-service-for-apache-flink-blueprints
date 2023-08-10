@@ -1,4 +1,5 @@
 import boto3
+import botocore
 import cfnresponse
 import logging
 import signal
@@ -44,8 +45,9 @@ def create_app(client, props):
             ApplicationName=props['AppName'])
         LOGGER.info("App already exists %s", describe_response)
         return
-    except Exception as e:
-        # TODO: Check exception details to ensure that this is a resource not found error
+    except botocore.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] != "ResourceNotFoundException":
+            raise e
         LOGGER.info("App doesn't exist yet so I am creating it")
 
     response = client.create_application(
@@ -99,8 +101,9 @@ def delete_app(client, props):
     try:
         describe_response = client.describe_application(ApplicationName=props['AppName'])
         LOGGER.info("App exists, going to delete it %s", describe_response)
-    except Exception as e:
-        # TODO: Check exception details to ensure that this is a resource not found error
+    except botocore.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] != "ResourceNotFoundException":
+            raise e
         LOGGER.info("App doesn't exist or already deleted %s", e)
         return
 
