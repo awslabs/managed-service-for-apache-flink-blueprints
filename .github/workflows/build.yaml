@@ -1,0 +1,93 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [created]
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: v18.16.1
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.16
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 11
+
+      - name: Install AWS CDK
+        run: |
+          npm install -g aws-cdk
+
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Test Python modules
+        working-directory: python
+        run: |
+          python -m pip install -r requirements.txt 
+          python -m pytest
+
+      - name: Create artifacts directory
+        run: |
+          mkdir artifacts
+
+      - name: Build bootstrap CDK stack
+        working-directory:  cdk-infra/shared
+        run: |
+          cd lambda/aws-lambda-helpers
+          mvn package
+          cd ../..
+          npm install
+          cdk synth -j > ../../target/BootstrapCdkStack.template.json
+          cp lambda/aws-lambda-helpers/target/aws-lambda-helpers-1.0.jar ../../target/
+
+      - name: Build kds-to-s3-datastream-java
+        working-directory: apps/java-datastream/kds-to-s3-datastream-java
+        run: |
+          mvn package
+          cd cdk-infra
+          npm install
+          cdk synth -j > ../target/kds-to-s3-datastream-java.json
+          cd ..
+          cp target/kds-to-s3-datastream-java-1.0.1.jar ../../../artifacts/
+          cp target/kds-to-s3-datastream-java.json ../../../artifacts/
+
+      - name: Build kafka-to-studio
+        run: |
+          cd apps/studio/msk-to-studio/cdk-infra
+          npm install
+          cdk synth -j > ../../../../target/CdkInfraKafkaToStudioStack.template.json
+          cd ../../../..
+          cd python/lambda_run_studio_notebook
+          ./bundle-lambda-for-release.sh
+          cp my-deployment.zip ../target/
+
+
+      - name: List artifacts
+        working-directory: target
+        run: |
+          ls -l 
+
+      - name: Publish artifacts
+        if: github.event_name == 'release'
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "artifacts/*"
+       
