@@ -46,15 +46,19 @@ jobs:
         run: |
           mkdir artifacts
 
-      - name: Build bootstrap CDK stack
+      - name: Build shared assets
         working-directory:  cdk-infra/shared
         run: |
+          npm install
           cd lambda/aws-lambda-helpers
           mvn package
-          cd ../..
+          cp target/aws-lambda-helpers-1.0.jar ../../../../artifacts/
+
+      - name: Build bootstrap template
+        working-directory:  bootstrap-cdk
+        run: |
           npm install
-          cdk synth -j > ../../artifacts/BootstrapCdkStack.template.json
-          cp lambda/aws-lambda-helpers/target/aws-lambda-helpers-1.0.jar ../../artifacts/
+          cdk synth -j > ../artifacts/BootstrapCdkStack.template.json
 
       - name: Build kds-to-s3-datastream-java
         working-directory: apps/java-datastream/kds-to-s3-datastream-java
