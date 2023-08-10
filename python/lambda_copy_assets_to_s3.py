@@ -28,8 +28,8 @@ def handler(event, context):
                 domain = parsed_url.netloc
                 sub_domain = parsed_url.path.rsplit('/')[1]
 
-                if domain != "github.com" or domain != "data-streaming-labs.s3.amazonaws.com":
-                    if sub_domain != "aws-labs" or sub_domain != "blueprint-test":
+                if domain != "github.com" and domain != "data-streaming-labs.s3.amazonaws.com":
+                    if sub_domain != "awslabs" and sub_domain != "blueprint-test":
                         raise Exception(
                             f"Unrecognized String in Bootstrapping List: {file_string}")
 
@@ -73,13 +73,13 @@ def handler(event, context):
 
 
 def test():
-    file_string = "https://data-streaming-labs.s3.amazonaws.com/blueprint-test/aws-lambda-helpers-1.0.jar"
+    file_string = "https://github.com/awslabs/managed-service-for-apache-flink-blueprints/releases/download/0.1-SNAPSHOT/my-deployment.zip"
     parsed_url = urlparse(file_string)
     domain = parsed_url.netloc
     sub_domain = parsed_url.path.rsplit('/')[1]
 
-    if domain == "github.com" or domain == "data-straeming-labs.s3.amazonaws.com":
-        if sub_domain == "aws-labs" or sub_domain == "blueprint-test":
+    if domain == "github.com" or domain == "data-streaming-labs.s3.amazonaws.com":
+        if sub_domain == "awslabs" or sub_domain == "blueprint-test":
             print("yes")
 
 
