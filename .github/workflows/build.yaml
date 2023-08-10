@@ -79,7 +79,7 @@ jobs:
           cd ../../../..
           cd python/lambda_run_studio_notebook
           ./bundle-lambda-for-release.sh
-          cp my-deployment.zip ../artifacts/
+          cp my-deployment.zip ../../artifacts/
 
 
       - name: List artifacts
