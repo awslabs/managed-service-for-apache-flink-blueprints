@@ -53,12 +53,20 @@ export class KdaJavaApp extends Construct {
                 new iam.PolicyStatement(
                     {
                         actions: ['iam:PassRole'],
-                        resources: [props.serviceExecutionRole]
+                        resources: [props.serviceExecutionRole],
+                        conditions: {
+                            StringEqualsIfExists: {
+                                "iam:PassedToService": "kinesisanalytics.amazonaws.com"
+                            },
+                            ArnEqualsIfExists: {
+                                "iam:AssociatedResourceARN": `arn:${props.partition}:kinesisanalytics:${props.region}:${props.account}:application/${props.appName}`
+                            }
+                        }
                     }),
             ],
             timeout: cdk.Duration.seconds(360),
             runtime: lambda.Runtime.PYTHON_3_9,
-            memorySize: 1024, // need extra memory for kafka-client
+            memorySize: 1024,
         });
 
         fn.addToRolePolicy(new iam.PolicyStatement(
