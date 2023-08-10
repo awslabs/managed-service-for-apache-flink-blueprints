@@ -53,8 +53,8 @@ jobs:
           mvn package
           cd ../..
           npm install
-          cdk synth -j > ../../target/BootstrapCdkStack.template.json
-          cp lambda/aws-lambda-helpers/target/aws-lambda-helpers-1.0.jar ../../target/
+          cdk synth -j > ../../artifacts/BootstrapCdkStack.template.json
+          cp lambda/aws-lambda-helpers/target/aws-lambda-helpers-1.0.jar ../../artifacts/
 
       - name: Build kds-to-s3-datastream-java
         working-directory: apps/java-datastream/kds-to-s3-datastream-java
@@ -71,15 +71,15 @@ jobs:
         run: |
           cd apps/studio/msk-to-studio/cdk-infra
           npm install
-          cdk synth -j > ../../../../target/CdkInfraKafkaToStudioStack.template.json
+          cdk synth -j > ../../../../artifacts/CdkInfraKafkaToStudioStack.template.json
           cd ../../../..
           cd python/lambda_run_studio_notebook
           ./bundle-lambda-for-release.sh
-          cp my-deployment.zip ../target/
+          cp my-deployment.zip ../artifacts/
 
 
       - name: List artifacts
-        working-directory: target
+        working-directory: artifacts
         run: |
           ls -l 
 
