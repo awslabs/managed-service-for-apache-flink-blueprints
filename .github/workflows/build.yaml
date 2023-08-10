@@ -51,7 +51,7 @@ jobs:
         run: |
           npm install
           cd lambda/aws-lambda-helpers
-          mvn package
+          mvn clean package shade:shade
           cp target/aws-lambda-helpers-1.0.jar ../../../../artifacts/
 
       - name: Build bootstrap template
