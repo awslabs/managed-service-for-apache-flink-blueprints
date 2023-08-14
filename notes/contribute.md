@@ -1,4 +1,4 @@
 # Contributing
 
 
-Contributing instructions coming soon.
+⚠️ Contributing instructions coming soon.
