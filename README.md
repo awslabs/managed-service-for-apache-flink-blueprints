@@ -23,7 +23,7 @@ Within this repo, you will find examples of Apache Flink applications that can b
 Follow the installation instructions [here](notes/installation.md) to install the shared libraries and begin developing.
 
 ## Contributing
-Have a good idea for a new Managed Service for Apache Flink Blueprint? Check out the instructions [here](notes/contribution.md) for how to contribute.
+Have a good idea for a new Managed Service for Apache Flink Blueprint? Check out the instructions [here](notes/contribute.md) for how to contribute.
 
 ## Modifying
 Need to modify the blueprint for your needs? Check out the instructions [here](notes/modify.md) for more details.
