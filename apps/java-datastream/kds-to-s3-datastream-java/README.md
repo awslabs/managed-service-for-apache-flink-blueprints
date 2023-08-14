@@ -62,9 +62,15 @@ aws s3 cp target/<<your generated jar>> ${S3_BUCKET}/{S3_FILE_KEY}
 
 
 
-### Launching via CloudFormation with pre-synthesized templates:
+## Launching via CloudFormation with pre-synthesized templates:
+
+1. First, navigate to [the bootstrapping folder](/bootstrap-cdk/): `/bootstrap-cdk` and synthesize the template: `cdk synth`
+2. Next, navigate to this blueprint's cdk-infra folder and type `cdk synth` to synthesize the template.
+3. Finally, navigate to the root of the project. `/`
 
 #### Bootstrap your account (run in root of project and change variables accordingly)
+
+Copy and paste this command into a terminal in the root of the project to bootstrap the assets into your account.
 
 ```bash
 export timestampToLetters=$(date +%s)
@@ -77,13 +83,13 @@ export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
 export CloudWatchLogStreamName=kinesis-analytics-log-stream
 export RoleName=kds-to-s3-demo-${timestampToLetters}-role
 
-```
-```bash
 aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=assetBucket,ParameterValue=$BucketName ParameterKey=assetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java-1.0.1.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java.json" --capabilities CAPABILITY_IAM
 ```
 
-### once bootstrapping finishes, then run next command: 
+### once bootstrapping finishes (in your AWS Console), then run next command from terminal: 
 
 ```bash
 aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/kds-to-s3-datastream-java.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=StreamName,ParameterValue=$StreamName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName --capabilities CAPABILITY_NAMED_IAM
 ```
+
+Now the blueprint will be launched in your account.
