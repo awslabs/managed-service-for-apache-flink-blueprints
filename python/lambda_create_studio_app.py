@@ -197,7 +197,7 @@ def delete_app(client, app_name):
 
 def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, source_topic, security_group, glue_db_arn, log_stream_arn):
     code_content = """
-    {
+{
         "paragraphs": [
           {
                      
@@ -235,7 +235,190 @@ def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, s
             "dateFinished": "2023-07-12T19:58:02+0000",
             "dateStarted": "2023-07-12T19:58:00+0000",
             "results": {}
+          },
+          {
+      "text": "%flink \n\nclass RandomTickerUDF extends ScalarFunction {\n  private val randomStrings: List[String] = List(\"AAPL\", \"AMZN\", \"MSFT\", \"INTC\", \"TBV\")\n    private val random: scala.util.Random = new scala.util.Random(System.nanoTime())\n\n  \n  override def isDeterministic(): Boolean = {\n      return false;\n  }\n  \n  \n  def eval(): String = {\n        val randomIndex = random.nextInt(randomStrings.length)\n        randomStrings(randomIndex)\n    }\n}\n\nstenv.registerFunction(\"random_ticker_udf\", new RandomTickerUDF())",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-18T21:51:11+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1692387316402_870710564",
+      "id": "paragraph_1692387316402_870710564",
+      "dateCreated": "2023-08-18T19:35:16+0000",
+      "dateStarted": "2023-08-18T21:51:11+0000",
+      "dateFinished": "2023-08-18T21:51:13+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:11053"
+    },
+    {
+      "text": "%flink.ssql(parallelism=1)\nDROP TABLE IF EXISTS generate_stock_data;\nCREATE TABLE generate_stock_data(\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE\n)\nWITH (\n    'connector' = 'datagen',\n    'fields.price.kind' = 'random',\n    'fields.price.min' ='0.00',\n    'fields.price.max' = '1000.00'\n\n\n);\n\n\nINSERT INTO stock_table \nSELECT random_ticker_udf() as ticker, event_time, price from generate_stock_data;",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-21T14:25:40+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "ticker0",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {
+                          "priority": 0,
+                          "direction": "desc"
+                        },
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "event_time1",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "price2",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1,
+                      "paginationPageSize": 250
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "ticker": "string",
+                      "event_time": "string",
+                      "price": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          },
+          "2": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "ticker": "string",
+                      "event_time": "string",
+                      "price": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
           }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1692370285234_1747432439",
+      "id": "paragraph_1692370285234_1747432439",
+      "dateCreated": "2023-08-18T14:51:25+0000",
+      "dateStarted": "2023-08-21T14:25:40+0000",
+      "dateFinished": "2023-08-21T14:26:40+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:11054"
+    }
         ],
         "name": '""" + app_name + """',
         "id": "ABCDEFGHI",

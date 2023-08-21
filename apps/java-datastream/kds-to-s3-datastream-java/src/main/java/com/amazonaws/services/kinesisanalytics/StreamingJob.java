@@ -205,6 +205,6 @@ public class StreamingJob {
 		runAppWithKinesisSource(env, appProperties);
 
 		// execute program
-		env.execute("KDA Kinesis Data Streams to S3 Flink Streaming App");
+		env.execute("Kinesis Data Streams to S3 Flink Streaming App");
 	} // main
 } // class
