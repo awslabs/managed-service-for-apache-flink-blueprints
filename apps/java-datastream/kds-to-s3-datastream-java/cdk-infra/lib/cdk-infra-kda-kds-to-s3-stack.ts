@@ -130,6 +130,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       "AWSRegion": this.region,
       "StreamInitialPosition": "TRIM_HORIZON",
       "PartitionFormat": "yyyy-MM-dd-HH",
+      "BootstrapStackName": cfnParams.get("BootstrapStackName")!.valueAsString,
     };
 
     const app = new KdaJavaApp(this, "kds-to-s3-java-app-test", {
@@ -211,6 +212,11 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
     params.set("CloudWatchLogStreamName", new cdk.CfnParameter(this, "CloudWatchLogStreamName", {
       type: "String",
       description: "The log stream name for the KDA app"
+    }));
+
+    params.set("BootstrapStackName", new cdk.CfnParameter(this, "BootstrapStackName", {
+      type: "String",
+      description: "Name of bootstrap stack used to create this blueprint"
     }));
 
     params.set("JarFile", new cdk.CfnParameter(this, "JarFile", {

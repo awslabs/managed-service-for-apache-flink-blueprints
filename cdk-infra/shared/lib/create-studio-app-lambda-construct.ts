@@ -43,6 +43,7 @@ export interface CreateStudioAppProps extends StackProps {
   bootstrapString: string;
   sourceTopicName: string;
   blueprintName: string;
+  bootstrapStackName: string;
 }
 
 export class CreateStudioApp extends Construct {
@@ -102,6 +103,7 @@ export class CreateStudioApp extends Construct {
                 zepFlinkVersion: props.zepFlinkVersion,
                 stackId: stack.stackId,
                 blueprintName: props!.blueprintName,
+                bootstrapStackName: props!.bootstrapStackName,
               },
         });
     }

@@ -301,6 +301,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       blueprintName: props!.blueprintName,
       runZepNotebookAssetBucket: assetBucketName,
       runZepNotebookAssetKey: runZeppelinNotebookLambdaASsetLocation,
+      bootstrapStackName: cfnParams.get("BootstrapStackName")!.valueAsString,
     });
 
     zepKdaConstruct.node.addDependency(vpc);
@@ -379,6 +380,12 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       description: "KDA Role used for the app"});
 
     params.set("RoleName", RoleName);
+
+    const BootstrapStackName = new cdk.CfnParameter(this, "BootstrapStackName", {
+      type: "String",
+      description: "Name of bootstrap stack used to create this blueprint"});
+
+    params.set("BootstrapStackName", BootstrapStackName);
     
     return params;
 
