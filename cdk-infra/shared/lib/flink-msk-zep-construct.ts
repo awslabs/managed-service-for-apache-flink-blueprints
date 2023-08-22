@@ -44,6 +44,7 @@ export interface FlinkMSKZepContructProps extends StackProps {
   blueprintName: string;
   runZepNotebookAssetBucket: string;
   runZepNotebookAssetKey: string;
+  bootstrapStackName: string;
 }
 
 export class FlinkMSKZepContstruct extends Construct {
@@ -66,7 +67,8 @@ export class FlinkMSKZepContstruct extends Construct {
       zepFlinkVersion: props.zepFlinkVersion,
       bootstrapString: props.bootstrapString,
       sourceTopicName: props.sourceTopicName,
-      blueprintName: props.blueprintName
+      blueprintName: props.blueprintName,
+      bootstrapStackName: props.bootstrapStackName,
     });
 
 
