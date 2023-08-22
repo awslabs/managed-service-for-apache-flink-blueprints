@@ -33,4 +33,4 @@ cd ..
 aws s3 cp target/$JAR_FILE s3://$BUCKET_NAME/$JAR_FILE
 
 # Create CFN stack
-aws cloudformation deploy --stack-name $APP_NAME  --parameter-overrides "AppName=${APP_NAME}" "BucketName=${BUCKET_NAME}" "StreamName=${APP_NAME}" "RoleName=${APP_NAME}" "GlueDatabaseName=default" "CloudWatchLogGroupName=blueprints/kinesis-analytics/${APP_NAME}" "CloudWatchLogStreamName=kinesis-analytics-log-stream" --capabilities CAPABILITY_NAMED_IAM --template-file target/$APP_NAME.json
+aws cloudformation deploy --stack-name $APP_NAME  --parameter-overrides "AppName=${APP_NAME}" "BucketName=${BUCKET_NAME}" "StreamName=${APP_NAME}" "RoleName=${APP_NAME}" "GlueDatabaseName=default" "CloudWatchLogGroupName=blueprints/kinesis-analytics/${APP_NAME}" "CloudWatchLogStreamName=kinesis-analytics-log-stream" "BootstrapStackName=test-script" --capabilities CAPABILITY_NAMED_IAM --template-file target/$APP_NAME.json
