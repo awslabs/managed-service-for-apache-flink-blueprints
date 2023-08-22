@@ -83,7 +83,7 @@ def create_app(client, app_name, execution_role, bootstrap_string, subnet1,
             "FlinkApplicationConfiguration": {
                 "ParallelismConfiguration": {
                     "ConfigurationType": "CUSTOM",
-                    "Parallelism": 2,
+                    "Parallelism": 4,
                     "ParallelismPerKPU": 1,
                     "AutoScalingEnabled": False,
                 }
