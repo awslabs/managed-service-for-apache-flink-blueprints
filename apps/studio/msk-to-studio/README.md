@@ -70,7 +70,7 @@ aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/B
 ### once bootstrapping finishes (in your AWS Console), then run next command from terminal: 
 
 ```bash
-aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/CdkInfraKafkaToStudioStack.template.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=GlueDatabaseName,ParameterValue=$GlueDatabaseName ParameterKey=zepFlinkVersion,ParameterValue=$zepFlinkVersion ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=ClusterName,ParameterValue=$ClusterName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName --capabilities CAPABILITY_NAMED_IAM --disable-rollback
+aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/CdkInfraKafkaToStudioStack.template.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=GlueDatabaseName,ParameterValue=$GlueDatabaseName ParameterKey=zepFlinkVersion,ParameterValue=$zepFlinkVersion ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=ClusterName,ParameterValue=$ClusterName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName ParameterKey=BootstrapStackName,ParameterValue=$BootstrapStackName --capabilities CAPABILITY_NAMED_IAM --disable-rollback
 ```
 
 Now the blueprint will be launched in your account.

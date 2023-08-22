@@ -89,7 +89,7 @@ aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/B
 ### once bootstrapping finishes (in your AWS Console), then run next command from terminal: 
 
 ```bash
-aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/kds-to-s3-datastream-java.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=StreamName,ParameterValue=$StreamName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/kds-to-s3-datastream-java.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=StreamName,ParameterValue=$StreamName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=BootstrapStackName,ParameterValue=$BootstrapStackName ParameterKey=RoleName,ParameterValue=$RoleName --capabilities CAPABILITY_NAMED_IAM
 ```
 
 Now the blueprint will be launched in your account.
