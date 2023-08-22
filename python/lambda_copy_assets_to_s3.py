@@ -82,5 +82,3 @@ def test():
         if sub_domain != "awslabs" and sub_domain != "blueprint-test":
             print("yes")
 
-
-print(test())
