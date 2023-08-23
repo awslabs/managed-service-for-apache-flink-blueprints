@@ -211,7 +211,9 @@ def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, s
     insert_datagen_content = {}
     insert_datagen_content["text"] = """%flink.ssql(parallelism=1)\nDROP TABLE IF EXISTS generate_stock_data;\nCREATE TABLE generate_stock_data(\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE\n)\nWITH (\n    'connector' = 'datagen',\n    'fields.price.kind' = 'random',\n    'fields.price.min' ='0.00',\n    'fields.price.max' = '1000.00'\n\n\n);\n\n\nINSERT INTO stock_table \nSELECT random_ticker_udf() as ticker, event_time, price from generate_stock_data;"""
     insert_datagen_content["title"] = "Please run this paragraph before running any additional event_time based queries in order to generate new data into the Apache Kafka topic"
-    
+    insert_datagen_content["config"] = {}
+    insert_datagen_content["config"]["title"]= "true"
+
     code_content["paragraphs"].append(create_udf_content)
     code_content["paragraphs"].append(create_stock_table_content)
     code_content["paragraphs"].append(insert_datagen_content)
