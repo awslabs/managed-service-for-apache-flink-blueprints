@@ -73,6 +73,7 @@ def create_app(client, app_name, execution_role, bootstrap_string, subnet1,
 
     code_content = generate_code_content(app_name, execution_role, bootstrap_string,
                                          subnet1, source_topic, security_group, glue_db_arn, log_stream_arn)
+    
     response = client.create_application(
         ApplicationName=app_name,
         ApplicationDescription="blueprint studio application",
@@ -82,7 +83,7 @@ def create_app(client, app_name, execution_role, bootstrap_string, subnet1,
             "FlinkApplicationConfiguration": {
                 "ParallelismConfiguration": {
                     "ConfigurationType": "CUSTOM",
-                    "Parallelism": 2,
+                    "Parallelism": 4,
                     "ParallelismPerKPU": 1,
                     "AutoScalingEnabled": False,
                 }
@@ -196,64 +197,31 @@ def delete_app(client, app_name):
 
 
 def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, source_topic, security_group, glue_db_arn, log_stream_arn):
-    code_content = """
-    {
-        "paragraphs": [
-          {
-                     
-            "text": "%flink.ssql(type=update)\nDROP TABLE IF EXISTS stock_table;\nCREATE TABLE stock_table (\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE,\n  WATERMARK for event_time as event_time - INTERVAL '15' SECONDS\n) WITH (\n  'connector' = 'kafka',\n  'topic' = 'sourceTopic',\n  'properties.bootstrap.servers' = '""" + bootstrap_string + """',\n  'properties.security.protocol' = 'SASL_SSL',\n  'properties.sasl.mechanism' = 'AWS_MSK_IAM',\n  'properties.sasl.jaas.config' = 'software.amazon.msk.auth.iam.IAMLoginModule required;',\n  'properties.sasl.client.callback.handler.class' = 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',\n  'properties.group.id' = 'myGroup',\n  'scan.startup.mode' = 'earliest-offset',\n  'format' = 'json'\n);\n\n\nSELECT * FROM stock_table;",
-            "user": "anonymous",
-            "dateUpdated": "2023-07-12T19:58:00+0000",
-            "progress": 0,
-            "config": {
-              "colWidth": 12,
-              "fontSize": 9,
-              "enabled": true,
-              "results": {},
-              "editorSetting": {
-                "language": "sql",
-                "editOnDblClick": false,
-                "completionKey": "TAB",
-                "completionSupport": true
-              },
-              "editorMode": "ace/mode/sql",
-              "type": "update"
-            },
-            "settings": {
-              "params": {},
-              "forms": {}
-            },
-            "apps": [],
-            "runtimeInfos": {},
-            "progressUpdateIntervalMs": 500,
-            "jobName": "'paragraph_example_create'",
-            "id": "paragraph_example_create",
-            "dateCreated": "2023-07-12T19:38:48+0000",
-            "status": "FINISHED",
-            "focus": true,
-            "$$hashKey": "object:235",
-            "dateFinished": "2023-07-12T19:58:02+0000",
-            "dateStarted": "2023-07-12T19:58:00+0000",
-            "results": {}
-          }
-        ],
-        "name": '""" + app_name + """',
-        "id": "ABCDEFGHI",
-        "defaultInterpreterGroup": "flink",
-        "version": "0.9.0-rc1-kda1",
-        "noteParams": {},
-        "noteForms": {},
-        "angularObjects": {},
-        "config": {
-          "isZeppelinNotebookCronEnable": false,
-          "looknfeel": "default",
-          "personalizedMode": "false"
-        },
-        "info": {},
-        "path": '/""" + app_name + """'
-      }"""
 
-    return code_content
+    code_content = {}
+    code_content["paragraphs"] = []
+
+    paragraph_1 = {}
+    paragraph_1["text"] = """%flink.ssql(type=update)\nDROP TABLE IF EXISTS stock_table;\nCREATE TABLE stock_table (\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE,\n  WATERMARK for event_time as event_time - INTERVAL '15' SECONDS\n) WITH (\n  'connector' = 'kafka',\n  'topic' = 'sourceTopic',\n  'properties.bootstrap.servers' = '""" + bootstrap_string + """',\n  'properties.security.protocol' = 'SASL_SSL',\n  'properties.sasl.mechanism' = 'AWS_MSK_IAM',\n  'properties.sasl.jaas.config' = 'software.amazon.msk.auth.iam.IAMLoginModule required;',\n  'properties.sasl.client.callback.handler.class' = 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',\n  'properties.group.id' = 'myGroup',\n  'scan.startup.mode' = 'earliest-offset',\n  'format' = 'json'\n);\n\n\nSELECT * FROM stock_table;"""
+
+    paragraph_2 = {}
+    paragraph_2["text"] = """%flink \n\nclass RandomTickerUDF extends ScalarFunction {\n  private val randomStrings: List[String] = List(\"AAPL\", \"AMZN\", \"MSFT\", \"INTC\", \"TBV\")\n    private val random: scala.util.Random = new scala.util.Random(System.nanoTime())\n\n  \n  override def isDeterministic(): Boolean = {\n      return false;\n  }\n  \n  \n  def eval(): String = {\n        val randomIndex = random.nextInt(randomStrings.length)\n        randomStrings(randomIndex)\n    }\n}\n\nstenv.registerFunction(\"random_ticker_udf\", new RandomTickerUDF())"""
+
+    paragraph_3 = {}
+    paragraph_3["text"] = """%flink.ssql(parallelism=1)\nDROP TABLE IF EXISTS generate_stock_data;\nCREATE TABLE generate_stock_data(\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE\n)\nWITH (\n    'connector' = 'datagen',\n    'fields.price.kind' = 'random',\n    'fields.price.min' ='0.00',\n    'fields.price.max' = '1000.00'\n\n\n);\n\n\nINSERT INTO stock_table \nSELECT random_ticker_udf() as ticker, event_time, price from generate_stock_data;"""
+
+    
+    code_content["paragraphs"].append(paragraph_1)
+    code_content["paragraphs"].append(paragraph_2)
+    code_content["paragraphs"].append(paragraph_3)
+
+    code_content["name"] = app_name
+    code_content["id"] = "ABCDEFGHI"
+    code_content["defaultInterpreterGroup"] = "flink"
+    code_content["version"] = "0.9.0-rc1-kda1"
+    code_content["path"] = "/" + app_name
+
+    return json.dumps(code_content)
 
 
 def timeout_handler(_signal, _frame):
