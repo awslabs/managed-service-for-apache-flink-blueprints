@@ -15,7 +15,7 @@ def handler(event, context):
         print("REQUEST RECEIVED:" + json.dumps(event))
         if (event["RequestType"] == "Create"):
 
-            asset_list = os.environ.get("assetList")
+            asset_list = os.environ.get("AssetList")
 
             # S3 bucket details
             bucket_name = os.environ.get("bucketName")

@@ -37,7 +37,7 @@ export class ZeppelinNoteRunConstruct extends Construct {
         super(scope, id);
 
 
-        const assetBucketObject = s3.Bucket.fromBucketName(
+        const AssetBucketObject = s3.Bucket.fromBucketName(
             this,
             "lambda-assets-bucket",
             props.codeBucket,
@@ -47,7 +47,7 @@ export class ZeppelinNoteRunConstruct extends Construct {
         this.zeppelinNoteRunFn = new lambda.SingletonFunction(this, 'RunZeppelinNoteFunction', {
             uuid: '97e4f730-4ee1-11e8-3c2d-fa7ae01b6ebc',
             lambdaPurpose: "Run Zeppelin Note",
-            code: lambda.Code.fromBucket(assetBucketObject, props.codeKey),
+            code: lambda.Code.fromBucket(AssetBucketObject, props.codeKey),
             handler: "lambda_function.lambda_handler",
             initialPolicy: [
                 new iam.PolicyStatement(

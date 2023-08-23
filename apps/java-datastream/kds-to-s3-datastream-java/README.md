@@ -83,7 +83,7 @@ export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
 export CloudWatchLogStreamName=kinesis-analytics-log-stream
 export RoleName=kds-to-s3-demo-${timestampToLetters}-role
 
-aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=assetBucket,ParameterValue=$BucketName ParameterKey=assetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java-1.0.1.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java.json" --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=AssetBucket,ParameterValue=$BucketName ParameterKey=AssetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java-1.0.1.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java.json" --capabilities CAPABILITY_IAM
 ```
 
 ### once bootstrapping finishes (in your AWS Console), then run next command from terminal: 

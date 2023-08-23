@@ -29,8 +29,8 @@ import { readFileSync } from "fs";
 export interface CopyAssetsConstructProps extends StackProps {
     account: string,
     region: string,
-    assetBucket: string,
-    assetList: string,
+    AssetBucket: string,
+    AssetList: string,
 }
 
 export class CopyAssetsLambdaConstruct extends Construct {
@@ -45,7 +45,7 @@ export class CopyAssetsLambdaConstruct extends Construct {
 
         // app package s3 bucket
         this.s3_bucket = new s3.Bucket(this, 'AssetsS3Bucket', {
-            bucketName: props.assetBucket,
+            bucketName: props.AssetBucket,
             encryption: s3.BucketEncryption.S3_MANAGED,
             enforceSSL: true,
             versioned: false,
@@ -70,16 +70,16 @@ export class CopyAssetsLambdaConstruct extends Construct {
                                 "s3:DeleteObject",
                                 "s3:ListBucket",
                                 "s3:GetBucketLocation"],
-                        resources: ['arn:aws:s3:::' + props.assetBucket + '/*',
-                                    'arn:aws:s3:::' + props.assetBucket]
+                        resources: ['arn:aws:s3:::' + props.AssetBucket + '/*',
+                                    'arn:aws:s3:::' + props.AssetBucket]
                     })
             ],
             timeout: cdk.Duration.seconds(300),
             runtime: lambda.Runtime.PYTHON_3_9,
             memorySize: 256,
             environment: {
-                assetList: props.assetList,
-                bucketName: props.assetBucket,
+                AssetList: props.AssetList,
+                bucketName: props.AssetBucket,
               },
 
         });

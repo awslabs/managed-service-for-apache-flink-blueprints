@@ -38,9 +38,9 @@ export interface FlinkMSKZepContructProps extends StackProps {
   kdaAppName: string;
   glueDatabaseName: string;
   serviceExecutionRole: string;
-  zepFlinkVersion: string;
+  RuntimeEnvironment: string;
   bootstrapString: string;
-  sourceTopicName: string;
+  SourceTopicName: string;
   blueprintName: string;
   runZepNotebookAssetBucket: string;
   runZepNotebookAssetKey: string;
@@ -64,9 +64,9 @@ export class FlinkMSKZepContstruct extends Construct {
       kdaAppName: props.kdaAppName,
       glueDatabaseName: props.glueDatabaseName,
       serviceExecutionRole: props.serviceExecutionRole,
-      zepFlinkVersion: props.zepFlinkVersion,
+      RuntimeEnvironment: props.RuntimeEnvironment,
       bootstrapString: props.bootstrapString,
-      sourceTopicName: props.sourceTopicName,
+      SourceTopicName: props.SourceTopicName,
       blueprintName: props.blueprintName,
       bootstrapStackName: props.bootstrapStackName,
     });

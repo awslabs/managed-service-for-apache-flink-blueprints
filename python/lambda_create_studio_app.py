@@ -35,7 +35,7 @@ def handler(event, context):
         security_group = os.environ["security_group"]
         glue_db_arn = os.environ["glue_db_arn"]
         log_stream_arn = os.environ["log_stream_arn"]
-        zep_flink_version = os.environ["zepFlinkVersion"]
+        zep_flink_version = os.environ["RuntimeEnvironment"]
         blueprint_name = os.environ["blueprintName"]
         stack_id = os.environ["stackId"]
 
@@ -201,16 +201,24 @@ def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, s
     code_content = {}
     code_content["paragraphs"] = []
 
-    create_stock_table_content = {}
-    create_stock_table_content["text"] = """%flink.ssql(type=update)\nDROP TABLE IF EXISTS stock_table;\nCREATE TABLE stock_table (\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE,\n  WATERMARK for event_time as event_time - INTERVAL '15' SECONDS\n) WITH (\n  'connector' = 'kafka',\n  'topic' = 'sourceTopic',\n  'properties.bootstrap.servers' = '""" + bootstrap_string + """',\n  'properties.security.protocol' = 'SASL_SSL',\n  'properties.sasl.mechanism' = 'AWS_MSK_IAM',\n  'properties.sasl.jaas.config' = 'software.amazon.msk.auth.iam.IAMLoginModule required;',\n  'properties.sasl.client.callback.handler.class' = 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',\n  'properties.group.id' = 'myGroup',\n  'scan.startup.mode' = 'earliest-offset',\n  'format' = 'json'\n);\n\n\nSELECT * FROM stock_table;"""
+
 
 
     create_udf_content = {}
     create_udf_content["text"] = """%flink \n\nclass RandomTickerUDF extends ScalarFunction {\n  private val randomStrings: List[String] = List(\"AAPL\", \"AMZN\", \"MSFT\", \"INTC\", \"TBV\")\n    private val random: scala.util.Random = new scala.util.Random(System.nanoTime())\n\n  \n  override def isDeterministic(): Boolean = {\n      return false;\n  }\n  \n  \n  def eval(): String = {\n        val randomIndex = random.nextInt(randomStrings.length)\n        randomStrings(randomIndex)\n    }\n}\n\nstenv.registerFunction(\"random_ticker_udf\", new RandomTickerUDF())"""
+    create_udf_content["title"] = """<h3><font  color="#3071A9">1) User Defined Function for generating stock ticker data</font></h3>"""
+    create_udf_content["config"] = {}
+    create_udf_content["config"]["title"] = "true"
+
+    create_stock_table_content = {}
+    create_stock_table_content["text"] = """%flink.ssql(type=update)\nDROP TABLE IF EXISTS stock_table;\nCREATE TABLE stock_table (\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE,\n  WATERMARK for event_time as event_time - INTERVAL '15' SECONDS\n) WITH (\n  'connector' = 'kafka',\n  'topic' = 'sourceTopic',\n  'properties.bootstrap.servers' = '""" + bootstrap_string + """',\n  'properties.security.protocol' = 'SASL_SSL',\n  'properties.sasl.mechanism' = 'AWS_MSK_IAM',\n  'properties.sasl.jaas.config' = 'software.amazon.msk.auth.iam.IAMLoginModule required;',\n  'properties.sasl.client.callback.handler.class' = 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',\n  'properties.group.id' = 'myGroup',\n  'scan.startup.mode' = 'earliest-offset',\n  'format' = 'json'\n);\n\n\nSELECT * FROM stock_table;"""
+    create_stock_table_content["title"] = """<h3><font  color="#3071A9">2) Defining a source table to source MSK topic and querying data</font></h3>"""
+    create_stock_table_content["config"] = {}
+    create_stock_table_content["config"]["title"] = "true"
 
     insert_datagen_content = {}
     insert_datagen_content["text"] = """%flink.ssql(parallelism=1)\nDROP TABLE IF EXISTS generate_stock_data;\nCREATE TABLE generate_stock_data(\n  ticker STRING,\n  event_time TIMESTAMP(3),\n  price DOUBLE\n)\nWITH (\n    'connector' = 'datagen',\n    'fields.price.kind' = 'random',\n    'fields.price.min' ='0.00',\n    'fields.price.max' = '1000.00'\n\n\n);\n\n\nINSERT INTO stock_table \nSELECT random_ticker_udf() as ticker, event_time, price from generate_stock_data;"""
-    insert_datagen_content["title"] = "Please run this paragraph before running any additional event_time based queries in order to generate new data into the Apache Kafka topic"
+    insert_datagen_content["title"] = """<h3><font  color="#3071A9" >3) Please run this paragraph before running any additional event_time based queries in order to generate new data into the MSF topic</font></h3>"""
     insert_datagen_content["config"] = {}
     insert_datagen_content["config"]["title"]= "true"
 

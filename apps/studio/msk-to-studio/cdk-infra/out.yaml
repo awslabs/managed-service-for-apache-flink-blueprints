@@ -31,7 +31,7 @@ Parameters:
     Type: String
     Default: myMSKClusterForZep
     Description: The MSK Serverless cluster name
-  sourceTopicName:
+  SourceTopicName:
     Type: String
     Default: sourceTopic
     Description: The source topic name
@@ -703,7 +703,7 @@ Resources:
           - MSKServerlessSourceBootstrapBrokersServerlessLookup66B3899B
           - BootstrapBrokerStringSaslIam
       Topic:
-        Ref: sourceTopicName
+        Ref: SourceTopicName
       NumPartitions: 3
       ReplicationFactor: 2
     DependsOn:
