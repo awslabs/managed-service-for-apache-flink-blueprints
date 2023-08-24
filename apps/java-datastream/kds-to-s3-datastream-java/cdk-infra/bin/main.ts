@@ -19,7 +19,7 @@
 
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CdkInfraKdaKdsToS3Stack } from '../lib/cdk-infra-kda-kds-to-s3-stack';
+import { CdkInfraKdsToS3Stack } from '../lib/cdk-infra-kds-to-s3-stack';
 import { BootstraplessStackSynthesizer } from 'cdk-bootstrapless-synthesizer';
 
 const app = new cdk.App();
@@ -28,7 +28,7 @@ const app = new cdk.App();
 //       expect there to be a pre-existing bucket. You can modify this stack
 //       to also create a bucket instead.
 //       Same goes for the bucket that this app will be writing to.
-new CdkInfraKdaKdsToS3Stack(app, 'CdkInfraKdaKdsToS3Stack', {
+new CdkInfraKdsToS3Stack(app, 'CdkInfraKdaKdsToS3Stack', {
   synthesizer: new BootstraplessStackSynthesizer({
     templateBucketName: 'cfn-template-bucket',
 
