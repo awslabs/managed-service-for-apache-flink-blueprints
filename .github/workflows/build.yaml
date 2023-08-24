@@ -75,7 +75,7 @@ jobs:
         run: |
           cd apps/studio/msk-to-studio/cdk-infra
           npm install
-          cdk synth -j > ../../../../artifacts/CdkInfraKafkaToStudioStack.template.json
+          cdk synth -j | grep -Ev '^\[Warning' > ../../../../artifacts/CdkInfraKafkaToStudioStack.template.json
           cd ../../../..
           cd python/lambda_run_studio_notebook
           ./bundle-lambda-for-release.sh
