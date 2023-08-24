@@ -30,6 +30,7 @@ def handler(event, context):
         app_name = os.environ["app_name"]
         execution_role = os.environ["execution_role"]
         bootstrap_string = os.environ["bootstrap_string"]
+        bootstrap_stack_name = os.environ["bootstrapStackName"]
         subnet1 = os.environ["subnet_1"]
         source_topic = os.environ["source_topic_name"]
         security_group = os.environ["security_group"]
@@ -42,7 +43,7 @@ def handler(event, context):
         if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
             LOGGER.info('In Create')
 
-            create_app(client, app_name, execution_role, bootstrap_string, subnet1,
+            create_app(client, app_name, execution_role, bootstrap_string, bootstrap_stack_name, subnet1,
                        source_topic, security_group, glue_db_arn, log_stream_arn, zep_flink_version,
                        blueprint_name, stack_id)
             cfnresponse.send(event, context, cfnresponse.SUCCESS, {
@@ -58,7 +59,7 @@ def handler(event, context):
                          {"Message": str(e)})
 
 
-def create_app(client, app_name, execution_role, bootstrap_string, subnet1,
+def create_app(client, app_name, execution_role, bootstrap_string, bootstrap_stack_name, subnet1,
                source_topic, security_group, glue_db_arn, log_stream_arn, zep_flink_version,
                blueprint_name, stack_id):
 
@@ -94,7 +95,8 @@ def create_app(client, app_name, execution_role, bootstrap_string, subnet1,
                         'PropertyGroupId': 'BlueprintMetadata',
                         'PropertyMap': {
                             'StackId': stack_id,
-                            'BlueprintName': blueprint_name
+                            'BlueprintName': blueprint_name,
+                            'BootstrapStackName': bootstrap_stack_name
                         }
                     },
                 ]
