@@ -27,11 +27,11 @@ const app = new cdk.App();
 
 const studioAppName = app.node.tryGetContext('studioAppName');
 const glueDatabaseName = app.node.tryGetContext('glueDatabaseName');
-const zepFlinkVersion = app.node.tryGetContext('zepFlinkVersion');
+const RuntimeEnvironment = app.node.tryGetContext('RuntimeEnvironment');
 const kdaLogGroup = app.node.tryGetContext('kdaLogGroup');
 const studioLogStream = app.node.tryGetContext('studioLogStream');
 const mskClusterName = app.node.tryGetContext('mskClusterName');
-const sourceTopicName = app.node.tryGetContext('sourceTopicName');
+const SourceTopicName = app.node.tryGetContext('SourceTopicName');
 const blueprintName = "MSK_STUDIO";
 
 // NOTE: We're not creating a bucket to hold the application jar; we
@@ -48,10 +48,10 @@ new CdkInfraKafkaToStudioStack(app, 'CdkInfraKafkaToStudioStack', {
   }),
   studioAppName: studioAppName,
   glueDatabaseName: glueDatabaseName,
-  zepFlinkVersion: zepFlinkVersion,
+  RuntimeEnvironment: RuntimeEnvironment,
   kdaLogGroup: kdaLogGroup,
   studioLogStream: studioLogStream,
   mskClusterName: mskClusterName,
-  sourceTopicName: sourceTopicName,
+  SourceTopicName: SourceTopicName,
   blueprintName: blueprintName,
 });

@@ -39,9 +39,9 @@ export interface CreateStudioAppProps extends StackProps {
   kdaAppName: string;
   glueDatabaseName: string;
   serviceExecutionRole: string;
-  zepFlinkVersion: string;
+  RuntimeEnvironment: string;
   bootstrapString: string;
-  sourceTopicName: string;
+  SourceTopicName: string;
   blueprintName: string;
   bootstrapStackName: string;
 }
@@ -98,9 +98,9 @@ export class CreateStudioApp extends Construct {
                 `:${props.account}:log-group:` +
                 `${props.logGroup.logGroupName}:log-stream:${props.logStream.logStreamName}`,
                 security_group: props.mskSG!.securityGroupId,
-                source_topic_name: props.sourceTopicName,
+                source_topic_name: props.SourceTopicName,
                 subnet_1: subnet1,
-                zepFlinkVersion: props.zepFlinkVersion,
+                RuntimeEnvironment: props.RuntimeEnvironment,
                 stackId: stack.stackId,
                 blueprintName: props!.blueprintName,
                 bootstrapStackName: props!.bootstrapStackName,

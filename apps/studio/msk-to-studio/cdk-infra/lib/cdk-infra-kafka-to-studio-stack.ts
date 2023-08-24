@@ -32,11 +32,11 @@ import { TopicCreationLambdaConstruct } from '../../../../../cdk-infra/shared/li
 export interface GlobalProps extends StackProps {
   studioAppName: string,
   glueDatabaseName: string,
-  zepFlinkVersion: string,
+  RuntimeEnvironment: string,
   kdaLogGroup: string,
   studioLogStream: string,
   mskClusterName: string,
-  sourceTopicName: string,
+  SourceTopicName: string,
   blueprintName: string,
 }
 
@@ -93,7 +93,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
 
     // This is the code for the lambda function that auto-creates the source topic
     // We need to pass in the path from the calling location
-    const assetBucketName = cfnParams.get("assetBucketName")!.valueAsString
+    const AssetBucketName = cfnParams.get("AssetBucketName")!.valueAsString
     const lambdaAssetLocation = 'aws-lambda-helpers-1.0.jar';
     const runZeppelinNotebookLambdaASsetLocation = 'my-deployment.zip';
 
@@ -107,7 +107,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       vpc: vpc,
       clusterNamesForPermission: [mskClusterNameStr],
       mskSG: mskSG,
-      bucketName: assetBucketName,
+      bucketName: AssetBucketName,
       lambdaAssetLocation: lambdaAssetLocation,
     });
 
@@ -121,7 +121,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       vpc: vpc,
       clusterName: mskClusterNameStr,
       mskSG: mskSG,
-      topicToCreate: cfnParams.get("sourceTopicName")!.valueAsString,
+      topicToCreate: cfnParams.get("SourceTopicName")!.valueAsString,
       onEventLambdaFn: topicCreationLambda.onEventLambdaFn,
     });
 
@@ -295,11 +295,11 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       kdaAppName: zepAppName,
       glueDatabaseName: cfnParams.get("glueDatabaseName")!.valueAsString,
       serviceExecutionRole: kdaAppRole.roleArn,
-      zepFlinkVersion: cfnParams.get("zepFlinkVersion")!.valueAsString,
+      RuntimeEnvironment: cfnParams.get("RuntimeEnvironment")!.valueAsString,
       bootstrapString: sourceServerlessMskCluster.bootstrapServersOutput.value,
-      sourceTopicName: cfnParams.get("sourceTopicName")!.valueAsString,
+      SourceTopicName: cfnParams.get("SourceTopicName")!.valueAsString,
       blueprintName: props!.blueprintName,
-      runZepNotebookAssetBucket: assetBucketName,
+      runZepNotebookAssetBucket: AssetBucketName,
       runZepNotebookAssetKey: runZeppelinNotebookLambdaASsetLocation,
       bootstrapStackName: cfnParams.get("BootstrapStackName")!.valueAsString,
     });
@@ -332,12 +332,12 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     });
     params.set("glueDatabaseName", glueDatabaseName);
 
-    const zepFlinkVersion = new cdk.CfnParameter(this, "zepFlinkVersion", {
+    const RuntimeEnvironment = new cdk.CfnParameter(this, "RuntimeEnvironment", {
       type: "String",
-      default: props!.zepFlinkVersion,
+      default: props!.RuntimeEnvironment,
       description: "Flink Version for KDA Studio (1.13.2, etc...)"
     });
-    params.set("zepFlinkVersion", zepFlinkVersion);
+    params.set("RuntimeEnvironment", RuntimeEnvironment);
 
     const kdaLogGroup = new cdk.CfnParameter(this, "CloudWatchLogGroupName", {
       type: "String",
@@ -360,19 +360,19 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     });
     params.set("mskClusterName", mskClusterName);
 
-    const sourceTopicName = new cdk.CfnParameter(this, "sourceTopicName", {
+    const SourceTopicName = new cdk.CfnParameter(this, "SourceTopicName", {
       type: "String",
-      default: props!.sourceTopicName,
+      default: props!.SourceTopicName,
       description: "The source topic name"
     });
-    params.set("sourceTopicName", sourceTopicName);
+    params.set("SourceTopicName", SourceTopicName);
 
-    const assetBucketName = new cdk.CfnParameter(this, "BucketName", {
+    const AssetBucketName = new cdk.CfnParameter(this, "BucketName", {
       type: "String",
       default: "my-asset-bucket-name",
       description: "The name of the Amazon S3 bucket where uploaded jar function will be stored."});
 
-    params.set("assetBucketName", assetBucketName);
+    params.set("AssetBucketName", AssetBucketName);
 
     const RoleName = new cdk.CfnParameter(this, "RoleName", {
       type: "String",

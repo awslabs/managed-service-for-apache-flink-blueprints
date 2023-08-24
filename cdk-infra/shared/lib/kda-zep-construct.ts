@@ -37,7 +37,7 @@ export interface KDAZepContructProps extends StackProps {
   glueDatabaseName: string;
   runtimeEnvironment: string;
   serviceExecutionRole: string;
-  zepFlinkVersion: string;
+  RuntimeEnvironment: string;
   codeContent: string;
 }
 

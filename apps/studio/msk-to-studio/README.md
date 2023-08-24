@@ -62,15 +62,15 @@ export GlueDatabaseName=studio_demo_${timestampToLetters}_db
 export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
 export CloudWatchLogStreamName=kinesis-analytics-log-stream
 export RoleName=studio-demo-${timestampToLetters}-role
-export zepFlinkVersion=ZEPPELIN-FLINK-3_0
+export RuntimeEnvironment=ZEPPELIN-FLINK-3_0
 
-aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=assetBucket,ParameterValue=$BucketName ParameterKey=assetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/aws-lambda-helpers-1.0.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/CdkInfraKafkaToStudioStack.template.json\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/my-deployment.zip" --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=AssetBucket,ParameterValue=$BucketName ParameterKey=AssetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/aws-lambda-helpers-1.0.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/CdkInfraKafkaToStudioStack.template.json\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/my-deployment.zip" --capabilities CAPABILITY_IAM
 ```
 
 ### once bootstrapping finishes (in your AWS Console), then run next command from terminal: 
 
 ```bash
-aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/CdkInfraKafkaToStudioStack.template.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=GlueDatabaseName,ParameterValue=$GlueDatabaseName ParameterKey=zepFlinkVersion,ParameterValue=$zepFlinkVersion ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=ClusterName,ParameterValue=$ClusterName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName ParameterKey=BootstrapStackName,ParameterValue=$BootstrapStackName --capabilities CAPABILITY_NAMED_IAM --disable-rollback
+aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/CdkInfraKafkaToStudioStack.template.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=GlueDatabaseName,ParameterValue=$GlueDatabaseName ParameterKey=RuntimeEnvironment,ParameterValue=$RuntimeEnvironment ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=ClusterName,ParameterValue=$ClusterName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName ParameterKey=BootstrapStackName,ParameterValue=$BootstrapStackName --capabilities CAPABILITY_NAMED_IAM --disable-rollback
 ```
 
 Now the blueprint will be launched in your account.

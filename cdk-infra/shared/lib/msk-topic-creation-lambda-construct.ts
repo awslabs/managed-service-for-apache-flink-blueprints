@@ -73,7 +73,7 @@ export class TopicCreationLambdaConstruct extends Construct {
             });
 
 
-        const assetBucketObject = s3.Bucket.fromBucketName(
+        const AssetBucketObject = s3.Bucket.fromBucketName(
                 this,
                 "lambda-assets-bucket",
                 props.bucketName,
@@ -83,7 +83,7 @@ export class TopicCreationLambdaConstruct extends Construct {
         this.onEventLambdaFn = new lambda.SingletonFunction(this, 'TopicCreationFunction', {
             uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc',
             lambdaPurpose: "Create MSK Topic",
-            code: lambda.Code.fromBucket(assetBucketObject, props.lambdaAssetLocation),
+            code: lambda.Code.fromBucket(AssetBucketObject, props.lambdaAssetLocation),
             handler: "com.amazonaws.TopicGenHandler",
             initialPolicy: [
                 lambdaIAMPolicy

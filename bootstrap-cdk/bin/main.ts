@@ -26,10 +26,10 @@ import { BootstraplessStackSynthesizer } from 'cdk-bootstrapless-synthesizer';
 
 const app = new cdk.App();
 
-const assetBucket = app.node.tryGetContext('assetBucket');
+const AssetBucket = app.node.tryGetContext('AssetBucket');
 
 // list of links (assets) to download
-const assetList = app.node.tryGetContext('assetList');
+const AssetList = app.node.tryGetContext('AssetList');
 
 const stackName = app.node.tryGetContext('stackName') ? app.node.tryGetContext('stackName') : "BootstrapCdkStack"
 
@@ -41,6 +41,6 @@ new BootstrapCdkStack(app, stackName, {
     fileAssetRegionSet: ['us-west-1', 'us-west-2'],
     fileAssetPrefix: 'file-asset-prefix/latest/'
   }),
-  assetBucket: assetBucket,
-  assetList: assetList,
+  AssetBucket: AssetBucket,
+  AssetList: AssetList,
 });

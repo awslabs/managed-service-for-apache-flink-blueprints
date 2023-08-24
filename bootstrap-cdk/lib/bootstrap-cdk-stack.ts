@@ -26,8 +26,8 @@ import { CopyAssetsLambdaConstruct } from "../../cdk-infra/shared/lib/copy-asset
 
 
 export interface GlobalProps extends StackProps {
-  assetBucket: string,
-  assetList: string,
+  AssetBucket: string,
+  AssetList: string,
 }
 
 
@@ -44,8 +44,8 @@ export class BootstrapCdkStack extends cdk.Stack {
     const copyAssetsLambdaFn = new CopyAssetsLambdaConstruct(this, 'CopyAssetsLambda', {
       account: this.account,
       region: this.region,
-      assetBucket: cfnParams.get("assetBucket")!.valueAsString,
-      assetList: cfnParams.get("assetList")!.valueAsString
+      AssetBucket: cfnParams.get("AssetBucket")!.valueAsString,
+      AssetList: cfnParams.get("AssetList")!.valueAsString
     });
     
 
@@ -56,17 +56,17 @@ export class BootstrapCdkStack extends cdk.Stack {
 
     getParams(props?: GlobalProps): Map<string, cdk.CfnParameter> {
       let params = new Map<string, cdk.CfnParameter>();
-      const assetBucket = new cdk.CfnParameter(this, "assetBucket", {
+      const AssetBucket = new cdk.CfnParameter(this, "AssetBucket", {
         type: "String",
         description: "The s3 bucket to create that will hold the CFN template script and assets."
       });
-      params.set("assetBucket", assetBucket);
+      params.set("AssetBucket", AssetBucket);
 
-      const assetList = new cdk.CfnParameter(this, "assetList", {
+      const AssetList = new cdk.CfnParameter(this, "AssetList", {
         type: "String",
         description: "The list of assets, comma separated, of all assets you wish to include in S3 bucket assets"});
   
-      params.set("assetList", assetList)
+      params.set("AssetList", AssetList)
       return params;
   
     }

@@ -41,10 +41,10 @@
     "studioAppName": "abc123",
     "runtimeEnvironment": "abc123",
     "glueDatabaseName": "abc123",
-    "zepFlinkVersion": "ZEPPELIN-FLINK-3_0",
+    "RuntimeEnvironment": "ZEPPELIN-FLINK-3_0",
     "kdaLogGroup": "abc123",
     "studioLogStream": "abc123",
     "mskClusterName": "abc123",
-    "sourceTopicName": "sourceTopic"
+    "SourceTopicName": "sourceTopic"
   }
 }
