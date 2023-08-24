@@ -41,7 +41,7 @@ export class AppStartLambdaConstruct extends Construct {
         this.appStartLambdaFn = new lambda.SingletonFunction(this, 'AppStartFunction', {
             uuid: '97e4f730-4ee1-11e8-3c2d-fa7ae01b6ebc',
             lambdaPurpose: "Start MSF Application",
-            code: lambda.Code.fromInline(readFileSync(`${__dirname}/../../../python/lambda_kda_app_start.py`, "utf-8")),
+            code: lambda.Code.fromInline(readFileSync(`${__dirname}/../../../python/lambda_msf_app_start.py`, "utf-8")),
             handler: "index.handler",
             initialPolicy: [
                 new iam.PolicyStatement(

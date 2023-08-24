@@ -33,7 +33,7 @@ export interface GlobalProps extends StackProps {
   studioAppName: string,
   glueDatabaseName: string,
   RuntimeEnvironment: string,
-  kdaLogGroup: string,
+  msfLogGroup: string,
   studioLogStream: string,
   mskClusterName: string,
   SourceTopicName: string,
@@ -77,12 +77,12 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     mskSG.connections.allowInternally(ec2.Port.allTraffic(), 'Allow all traffic between hosts having the same security group');
 
     // create cw log group and log stream
-    // so it can be used when creating kda app
-    const studioLogGroup = new logs.LogGroup(this, 'KDALogGroup', {
-      logGroupName: cfnParams.get("kdaLogGroup")!.valueAsString,
+    // so it can be used when creating msf app
+    const studioLogGroup = new logs.LogGroup(this, 'MSFLogGroup', {
+      logGroupName: cfnParams.get("msfLogGroup")!.valueAsString,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    const logStream = new logs.LogStream(this, 'KDALogStream', {
+    const logStream = new logs.LogStream(this, 'MSFLogStream', {
       logGroup: studioLogGroup,
 
       logStreamName: cfnParams.get("studioLogStream")!.valueAsString,
@@ -129,7 +129,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     topicCreationLambda.node.addDependency(sourceServerlessMskCluster);
     sourceServerlessMskCluster.node.addDependency(vpc);
 
-    // our KDA app needs to be the following permissions against MSK
+    // our MSF app needs to be the following permissions against MSK
     // - read data
     // - write data
     // - create topics
@@ -166,11 +166,11 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs to be able to log
+    // our MSF app needs to be able to log
     const accessCWLogsPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
-          resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:${cfnParams.get("kdaLogGroup")!.valueAsString}:*`],
+          resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:${cfnParams.get("msfLogGroup")!.valueAsString}:*`],
           actions: ['logs:PutLogEvents',
                     'logs:DescribeLogGroups',
                     'logs:DescribeLogStreams'
@@ -179,7 +179,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs to be able to write metrics
+    // our MSF app needs to be able to write metrics
     const accessCWMetricsPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -189,8 +189,8 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs access to describe kinesisanalytics
-    const kdaAccessPolicy = new iam.PolicyDocument({
+    // our MSF app needs access to describe kinesisanalytics
+    const msfAccessPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
           resources: ['arn:aws:kinesisanalytics:'+ this.region +':' + this.account + ':application/' + props?.studioAppName],
@@ -199,7 +199,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs access to access glue db
+    // our MSF app needs access to access glue db
     const glueAccessPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -233,7 +233,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     });
 
 
-    // our KDA app needs access to perform VPC actions
+    // our MSF app needs access to perform VPC actions
     const accessVPCPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -258,9 +258,9 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       ],
     });
 
-    const kdaAppRole = new iam.Role(this, 'kda-app-role', {
+    const msfAppRole = new iam.Role(this, 'msf-app-role', {
       assumedBy: new iam.ServicePrincipal('kinesisanalytics.amazonaws.com'),
-      description: 'KDA app role',
+      description: 'MSF app role',
       roleName: cfnParams.get("RoleName")!.valueAsString,
       inlinePolicies: {
         AccessMSKPolicy: accessMSKPolicy,
@@ -268,7 +268,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
         AccessCWLogsPolicy: accessCWLogsPolicy,
         AccessCWMetricsPolicy: accessCWMetricsPolicy,
         AccessVPCPolicy: accessVPCPolicy,
-        KDAAccessPolicy: kdaAccessPolicy,
+        MSFAccessPolicy: msfAccessPolicy,
         GlueAccessPolicy: glueAccessPolicy,
       },
     });
@@ -281,20 +281,20 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       }
     });
 
-    // instantiate zep kda construct
+    // instantiate zep msf construct
     const zepAppName = cfnParams.get("studioAppName")!.valueAsString;
 
 
-    const zepKdaConstruct = new FlinkMSKZepContstruct(this, 'KDAZepConstruct', {
+    const zepMSFConstruct = new FlinkMSKZepContstruct(this, 'MSFZepConstruct', {
       account: this.account,
       region: this.region,
       vpc: vpc,
       mskSG: mskSG,
       logGroup: studioLogGroup,
       logStream: logStream,
-      kdaAppName: zepAppName,
+      msfAppName: zepAppName,
       glueDatabaseName: cfnParams.get("glueDatabaseName")!.valueAsString,
-      serviceExecutionRole: kdaAppRole.roleArn,
+      serviceExecutionRole: msfAppRole.roleArn,
       RuntimeEnvironment: cfnParams.get("RuntimeEnvironment")!.valueAsString,
       bootstrapString: sourceServerlessMskCluster.bootstrapServersOutput.value,
       SourceTopicName: cfnParams.get("SourceTopicName")!.valueAsString,
@@ -304,10 +304,10 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       bootstrapStackName: cfnParams.get("BootstrapStackName")!.valueAsString,
     });
 
-    zepKdaConstruct.node.addDependency(vpc);
-    zepKdaConstruct.node.addDependency(sourceServerlessMskCluster);
-    zepKdaConstruct.node.addDependency(kdaAppRole);
-    zepKdaConstruct.node.addDependency(studioLogGroup);
+    zepMSFConstruct.node.addDependency(vpc);
+    zepMSFConstruct.node.addDependency(sourceServerlessMskCluster);
+    zepMSFConstruct.node.addDependency(msfAppRole);
+    zepMSFConstruct.node.addDependency(studioLogGroup);
 
  
 
@@ -320,7 +320,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     const studioAppName = new cdk.CfnParameter(this, "AppName", {
       type: "String",
       default: props!.studioAppName,
-      description: "The name of the KDA Studio app"
+      description: "The name of the MSF Studio app"
     });
     params.set("studioAppName", studioAppName);
 
@@ -328,28 +328,28 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     const glueDatabaseName = new cdk.CfnParameter(this, "GlueDatabaseName", {
       type: "String",
       default: props!.glueDatabaseName,
-      description: "The Glue catalog that will be used w/ Kinesis Data Analytics Studio"
+      description: "The Glue catalog that will be used w/ Managed Service for Apache Flink Studio"
     });
     params.set("glueDatabaseName", glueDatabaseName);
 
     const RuntimeEnvironment = new cdk.CfnParameter(this, "RuntimeEnvironment", {
       type: "String",
       default: props!.RuntimeEnvironment,
-      description: "Flink Version for KDA Studio (1.13.2, etc...)"
+      description: "Flink Version for MSF Studio (1.13.2, etc...)"
     });
     params.set("RuntimeEnvironment", RuntimeEnvironment);
 
-    const kdaLogGroup = new cdk.CfnParameter(this, "CloudWatchLogGroupName", {
+    const msfLogGroup = new cdk.CfnParameter(this, "CloudWatchLogGroupName", {
       type: "String",
-      default: props!.kdaLogGroup,
-      description: "The log group name for the KDA studio app"
+      default: props!.msfLogGroup,
+      description: "The log group name for the MSF Studio app"
     });
-    params.set("kdaLogGroup", kdaLogGroup);
+    params.set("msfLogGroup", msfLogGroup);
 
     const studioLogStream = new cdk.CfnParameter(this, "CloudWatchLogStreamName", {
       type: "String",
       default: props!.studioLogStream,
-      description: "The log stream name for the KDA studio app"
+      description: "The log stream name for the MSF Studio app"
     });
     params.set("studioLogStream", studioLogStream);
 
@@ -377,7 +377,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     const RoleName = new cdk.CfnParameter(this, "RoleName", {
       type: "String",
       default: "role-name",
-      description: "KDA Role used for the app"});
+      description: "MSF Role used for the app"});
 
     params.set("RoleName", RoleName);
 

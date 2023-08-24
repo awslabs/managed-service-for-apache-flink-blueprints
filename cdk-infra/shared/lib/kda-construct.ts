@@ -23,14 +23,14 @@ import * as kinesisanalyticsv2 from 'aws-cdk-lib/aws-kinesisanalyticsv2';
 import { aws_logs as logs } from 'aws-cdk-lib';
 
 
-export interface KDAContructProps extends StackProps {
+export interface MSFContructProps extends StackProps {
     account: string,
     region: string,
     vpc: ec2.Vpc | undefined | null,
     mskSG: ec2.SecurityGroup | undefined | null,
     logGroup: logs.LogGroup,
     logStream: logs.LogStream,
-    kdaAppName: string,
+    msfAppName: string,
     appBucket: string,
     appFileKeyOnS3: string,
     runtimeEnvironment: string,
@@ -39,12 +39,12 @@ export interface KDAContructProps extends StackProps {
     pyFlinkRunOptions:  { [key: string]: string; } | undefined | null,
 }
 
-export class KDAConstruct extends Construct {
+export class MSFConstruct extends Construct {
     public cfnApplicationProps: kinesisanalyticsv2.CfnApplicationProps;
-    public kdaApp: kinesisanalyticsv2.CfnApplication;
+    public msfApp: kinesisanalyticsv2.CfnApplication;
     public cwlogsOption: kinesisanalyticsv2.CfnApplicationCloudWatchLoggingOption;
 
-    constructor(scope: Construct, id: string, props: KDAContructProps) {
+    constructor(scope: Construct, id: string, props: MSFContructProps) {
         super(scope, id);
 
         let propertyGroups = [
@@ -79,7 +79,7 @@ export class KDAConstruct extends Construct {
             runtimeEnvironment: props.runtimeEnvironment,
 
             serviceExecutionRole: props.serviceExecutionRole,
-            applicationName: props.kdaAppName,
+            applicationName: props.msfAppName,
 
             applicationConfiguration: {
                 flinkApplicationConfiguration: {
@@ -121,8 +121,8 @@ export class KDAConstruct extends Construct {
         }
 
         // application
-        this.kdaApp =
-           new kinesisanalyticsv2.CfnApplication(this, 'KDAApp', this.cfnApplicationProps);
+        this.msfApp =
+           new kinesisanalyticsv2.CfnApplication(this, 'MSFApp', this.cfnApplicationProps);
 
         // https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/iam-access-control-overview-cwl.html
         const logStreamArn = `arn:aws:logs:${props.region}` +
@@ -132,16 +132,16 @@ export class KDAConstruct extends Construct {
         // cw logging config for app
         this.cwlogsOption = new kinesisanalyticsv2.CfnApplicationCloudWatchLoggingOption(
             this,
-            'KDACWLogs',
+            'MSFCWLogs',
             {
-                applicationName: props.kdaAppName,
+                applicationName: props.msfAppName,
                 cloudWatchLoggingOption: {
                     logStreamArn: logStreamArn
                 }
             }
         );
 
-        this.cwlogsOption.addDependency(this.kdaApp);
+        this.cwlogsOption.addDependency(this.msfApp);
 
     }
 }

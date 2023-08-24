@@ -1,8 +1,8 @@
 {
-  "name": "cdk-infra-kda-kafka-to-s3",
+  "name": "cdk-infra-msf-kafka-to-s3",
   "version": "0.1.0",
   "bin": {
-    "cdk-infra-kda-kafka-to-s3": "bin/cdk-infra-kda-kafka-to-s3.js"
+    "cdk-infra-msf-kafka-to-s3": "bin/cdk-infra-msf-kafka-to-s3.js"
   },
   "scripts": {
     "build": "tsc",

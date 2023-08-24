@@ -38,7 +38,7 @@
       "aws",
       "aws-cn"
     ],
-    "kdaAppName": "",
+    "msfAppName": "",
     "appBucket": "",
     "appFileKeyOnS3": "",
     "appSinkBucket": "",
@@ -47,8 +47,8 @@
     "flinkVersion": "1.15.2",
     "RuntimeEnvironment": "1.13.2",
     "deployDataGen": "false",
-    "kdaLogGroup": "",
-    "kdaLogStream": "",
+    "msfLogGroup": "",
+    "msfLogStream": "",
     "sourceKinesisStreamName": ""
   }
 }

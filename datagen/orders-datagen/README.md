@@ -1,14 +1,14 @@
 # Orders DataGen
 
-This guide walks you through how to use Flink SQL and a KDA Studio Zeppelin notebook to generate synthetic data into an MSK topic. Before you can use the application, ensure that you have a Kinesis Data Analytics application that can communicate with an MSK cluster using IAM and all the proper permissions have been setup. The [blueprints](../../README.md#blueprints) contained in this repo do all of that for you.
+This guide walks you through how to use Flink SQL and a MSF Studio Zeppelin notebook to generate synthetic data into an MSK topic. Before you can use the application, ensure that you have a Managed Service for Apache Flink application that can communicate with an MSK cluster using IAM and all the proper permissions have been setup. The [blueprints](../../README.md#blueprints) contained in this repo do all of that for you.
 
-NOTE: If you're new to Kinesis Data Analytics Studio, we recommend that you review the [Creating a Studio Notebook in Kinesis Data Analytics Tutorial](https://docs.aws.amazon.com/kinesisanalytics/latest/java/example-notebook.html) first.
+NOTE: If you're new to Managed Service for Apache Flink Studio, we recommend that you review the [Creating a Studio Notebook in Managed Service for Apache Flink Tutorial](https://docs.aws.amazon.com/kinesisanalytics/latest/java/example-notebook.html) first.
 
 ## Steps for generating data
 
 ### Use the built-in Flink `datagen` source
 
-Once you've opened up a Zeppelin notebook within the running KDA Studio application, you can create a datagen source following SQL statement in a new notebook cell:
+Once you've opened up a Zeppelin notebook within the running MSF Studio application, you can create a datagen source following SQL statement in a new notebook cell:
 
 ```SQL
 %flink.ssql

@@ -1,6 +1,6 @@
 # KDS to S3 (Java Datastream API)
 
-This blueprint deploys a KDA app that reads from Kinesis Data Streams (KDS) using IAM auth and writes to S3 using the Java DataStream API:
+This blueprint deploys a MSF app that reads from Kinesis Data Streams (KDS) using IAM auth and writes to S3 using the Java DataStream API:
 
 ![Arch diagram](img/kds-kda-s3.png)
 
@@ -17,15 +17,15 @@ This blueprint deploys a KDA app that reads from Kinesis Data Streams (KDS) usin
 ## High-level deployment steps
 
 1. Build app and copy resulting JAR to S3 location
-2. Deploy associated infra (KDS and KDA) using CDK script
-    - If using existing resources, you can simply update app properties in KDA.
+2. Deploy associated infra (KDS and MSF) using CDK script
+    - If using existing resources, you can simply update app properties in MSF.
 3. Perform data generation
 
 ## Prerequisites
 
 1. Maven
 2. AWS SDK v2
-2. AWS CDK v2 - for deploying associated infra (KDS Stream and KDA app)
+2. AWS CDK v2 - for deploying associated infra (KDS Stream and MSF app)
 
 ## Step-by-step deployment walkthrough
 
@@ -52,11 +52,11 @@ mvn clean package
 aws s3 cp target/<<your generated jar>> ${S3_BUCKET}/{S3_FILE_KEY}
 ```
 
-4. Follow instructions in the [`cdk-infra`](cdk-infra/README.md) folder to deploy the infrastructure associated with this app - such as the source KDS stream and the Kinesis Data Analytics application.
+4. Follow instructions in the [`cdk-infra`](cdk-infra/README.md) folder to deploy the infrastructure associated with this app - such as the source KDS stream and the Managed Service for Apache Flink application.
 
 5. Follow instructions in [orders-datagen](../../../datagen/orders-datagen/README.md) to create topic and generate data into the source KDS stream.
 
-6. Start your Kinesis Data Analytics application from the AWS console.
+6. Start your Managed Service for Apache Flink application from the AWS console.
 
 7. Do a Flink query or S3 Select Query against S3 to view data written to S3.
 
@@ -79,8 +79,8 @@ export BootstrapStackName=bootstrap-my-account-${timestampToLetters}-stack
 export BlueprintStackName=kds-to-s3-blueprint-${timestampToLetters}-stack
 export AppName=kds-to-s3-demo-${timestampToLetters}-app
 export StreamName=kds-to-s3-demo-${timestampToLetters}-stream
-export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
-export CloudWatchLogStreamName=kinesis-analytics-log-stream
+export CloudWatchLogGroupName=blueprints/managed-flink/${AppName}
+export CloudWatchLogStreamName=managed-flink-log-stream
 export RoleName=kds-to-s3-demo-${timestampToLetters}-role
 
 aws cloudformation create-stack --template-body file://./bootstrap-cdk/cdk.out/BootstrapCdkStack.template.json --stack-name ${BootstrapStackName} --parameters ParameterKey=AssetBucket,ParameterValue=$BucketName ParameterKey=AssetList,ParameterValue="https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java-1.0.1.jar\,https://data-streaming-labs.s3.amazonaws.com/blueprint-test/kds-to-s3-datastream-java.json" --capabilities CAPABILITY_IAM

@@ -171,7 +171,7 @@ def delete_app(client, app_name):
         "ApplicationConfigurationDescription"]["VpcConfigurationDescriptions"][0]
     vpc_id = vpc_configuration["VpcConfigurationId"]
 
-    LOGGER.info("Attempting to delete VPC from KDA App, VPC ID %s", vpc_id)
+    LOGGER.info("Attempting to delete VPC from MSF App, VPC ID %s", vpc_id)
 
     delete_vpc_response = client.delete_application_vpc_configuration(
         ApplicationName=app_name,
@@ -231,7 +231,7 @@ def generate_code_content(app_name, execution_role, bootstrap_string, subnet1, s
     code_content["name"] = app_name
     code_content["id"] = "ABCDEFGHI"
     code_content["defaultInterpreterGroup"] = "flink"
-    code_content["version"] = "0.9.0-rc1-kda1"
+    code_content["version"] = "0.9.0-rc1-msf1"
     code_content["path"] = "/" + app_name
 
     return json.dumps(code_content)

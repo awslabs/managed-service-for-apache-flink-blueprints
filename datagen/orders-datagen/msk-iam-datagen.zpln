@@ -344,7 +344,7 @@
           "group": "flink",
           "values": [
             {
-              "jobUrl": "/flinkdashboard/#/job/f8321a377973c7104362313ebfafe2d2",
+              "jobUrl": "/flinmsfshboard/#/job/f8321a377973c7104362313ebfafe2d2",
               "$$hashKey": "object:25885"
             }
           ],
@@ -474,7 +474,7 @@
           "group": "flink",
           "values": [
             {
-              "jobUrl": "/flinkdashboard/#/job/a1197cb64f50a9d697bfe29ade32d822",
+              "jobUrl": "/flinmsfshboard/#/job/a1197cb64f50a9d697bfe29ade32d822",
               "$$hashKey": "object:28413"
             }
           ],
