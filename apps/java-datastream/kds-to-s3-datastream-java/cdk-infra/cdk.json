@@ -45,7 +45,7 @@
     "runtimeEnvironment": "",
     "glueDatabaseName": "",
     "flinkVersion": "1.15.2",
-    "zepFlinkVersion": "1.13.2",
+    "RuntimeEnvironment": "1.13.2",
     "deployDataGen": "false",
     "kdaLogGroup": "",
     "kdaLogStream": "",
