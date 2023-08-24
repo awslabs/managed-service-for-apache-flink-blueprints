@@ -349,7 +349,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
     const studioLogStream = new cdk.CfnParameter(this, "CloudWatchLogStreamName", {
       type: "String",
       default: props!.studioLogStream,
-      description: "The log stream name for the MSF studio app"
+      description: "The log stream name for the MSF Studio app"
     });
     params.set("studioLogStream", studioLogStream);
 
