@@ -22,17 +22,15 @@ import { Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { aws_logs as logs } from 'aws-cdk-lib';
 import { aws_kinesis as kinesis } from 'aws-cdk-lib';
-import { KDAConstruct } from '../../../../../cdk-infra/shared/lib/kda-construct';
-import { KdaJavaApp, KdaJavaAppRuntimeEnvironment } from '../../../../../cdk-infra/shared/lib/kda-java-app-construct';
+import { MsfJavaApp, MsfRuntimeEnvironment } from '../../../../../cdk-infra/shared/lib/msf-java-app-construct';
 import { StreamMode } from 'aws-cdk-lib/aws-kinesis';
 import { AppStartLambdaConstruct } from '../../../../../cdk-infra/shared/lib/app-start-lambda-construct';
 import { KdsDataGenLambdaConstruct } from  '../../../../../cdk-infra/shared/lib/kds-datagen-lambda-construct'
-import { Bucket } from 'aws-cdk-lib/aws-s3';
 
 export interface GlobalProps extends StackProps {
 }
 
-export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
+export class CdkInfraKdsToS3Stack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: GlobalProps) {
     super(scope, id, props);
 
@@ -40,12 +38,12 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
     let cfnParams = this.getParams(props);
 
     // create cw log group and log stream
-    // so it can be used when creating kda app
-    const logGroup = new logs.LogGroup(this, 'KDALogGroup', {
+    // so it can be used when creating the Flink app
+    const logGroup = new logs.LogGroup(this, 'LogGroup', {
       logGroupName: cfnParams.get("CloudWatchLogGroupName")!.valueAsString,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    const logStream = new logs.LogStream(this, 'KDALogStream', {
+    const logStream = new logs.LogStream(this, 'LogStream', {
       logStreamName: cfnParams.get("CloudWatchLogStreamName")!.valueAsString,
       logGroup: logGroup,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -57,7 +55,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       retentionPeriod: cdk.Duration.hours(cfnParams.get("RetentionPeriodHours")!.valueAsNumber)
     });
 
-    // our KDA app needs to be able to log
+    // our Flink app needs to be able to log
     const accessCWLogsPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -70,7 +68,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs to be able to write metrics
+    // our Flink app needs to be able to write metrics
     const accessCWMetricsPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -80,7 +78,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs access to read application jar from S3
+    // our Flink app needs access to read application jar from S3
     // as well as to write to S3 (from FileSink)
     const accessS3Policy = new iam.PolicyDocument({
       statements: [
@@ -95,7 +93,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       ],
     });
 
-    // our KDA app needs to be able to read from the source Kinesis Data Stream
+    // our Flink app needs to be able to read from the source Kinesis Data Stream
     const accessKdsPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -110,10 +108,10 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       ],
     });
 
-    const kdaAppRole = new iam.Role(this, 'kda-app-role', {
+    const appRole = new iam.Role(this, 'flink-app-role', {
       roleName: cfnParams.get("RoleName")!.valueAsString,
       assumedBy: new iam.ServicePrincipal('kinesisanalytics.amazonaws.com'),
-      description: 'KDA app role',
+      description: 'Flink application role',
       inlinePolicies: {
         AccessKDSPolicy: accessKdsPolicy,
         AccessCWLogsPolicy: accessCWLogsPolicy,
@@ -133,13 +131,13 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       "BootstrapStackName": cfnParams.get("BootstrapStackName")!.valueAsString,
     };
 
-    const app = new KdaJavaApp(this, "kds-to-s3-java-app-test", {
+    const app = new MsfJavaApp(this, "kds-to-s3-java-app-test", {
       account: this.account,
       region: this.region,
       partition: this.partition,
       appName: cfnParams.get("AppName")!.valueAsString,
-      runtimeEnvironment: KdaJavaAppRuntimeEnvironment.FLINK_1_15,
-      serviceExecutionRole: kdaAppRole.roleArn,
+      runtimeEnvironment: MsfRuntimeEnvironment.FLINK_1_15,
+      serviceExecutionRole: appRole.roleArn,
       bucketName: cfnParams.get("BucketName")!.valueAsString,
       jarFile: cfnParams.get("JarFile")!.valueAsString,
       logStreamName:  logStream.logStreamName,
@@ -147,7 +145,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
       applicationProperties: flinkApplicationProps,
     });
 
-    // Configure app start lambda to automatically start KDA app
+    // Configure app start lambda to automatically start the Flink app
     const appStartLambdaFnConstruct = new AppStartLambdaConstruct(this, 'AppStartLambda', {
       account: this.account,
       region: this.region,
@@ -186,7 +184,7 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
 
     params.set("AppName", new cdk.CfnParameter(this, "AppName", {
       type: "String",
-      description: "The name of the Kinesis Data Analytics application"
+      description: "Flink application name"
     }));
 
     params.set("BucketName", new cdk.CfnParameter(this, "BucketName", {
@@ -201,17 +199,17 @@ export class CdkInfraKdaKdsToS3Stack extends cdk.Stack {
 
     params.set("RoleName", new cdk.CfnParameter(this, "RoleName", {
       type: "String",
-      description: "Name of IAM role used to run KDA app"
+      description: "Name of IAM role used to run the Flink application"
     }));
 
     params.set("CloudWatchLogGroupName", new cdk.CfnParameter(this, "CloudWatchLogGroupName", {
       type: "String",
-      description: "The log group name for the KDA app"
+      description: "The log group name for the Flink application"
     }));
 
     params.set("CloudWatchLogStreamName", new cdk.CfnParameter(this, "CloudWatchLogStreamName", {
       type: "String",
-      description: "The log stream name for the KDA app"
+      description: "The log stream name for the Flink application"
     }));
 
     params.set("BootstrapStackName", new cdk.CfnParameter(this, "BootstrapStackName", {
