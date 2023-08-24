@@ -16,12 +16,12 @@ timeout_seconds = 120
 note_url_id = "ABCDEFGHI"
 
 
-def run_all_paragraphs(my_kda_appname):
+def run_all_paragraphs(my_msf_appname):
 
-    kda = boto3.client('kinesisanalyticsv2')
+    msf = boto3.client('kinesisanalyticsv2')
 
-    response = kda.create_application_presigned_url(
-        ApplicationName=my_kda_appname,
+    response = msf.create_application_presigned_url(
+        ApplicationName=my_msf_appname,
         UrlType='ZEPPELIN_UI_URL',
         SessionExpirationDurationInSeconds=1800
     )
@@ -30,7 +30,7 @@ def run_all_paragraphs(my_kda_appname):
 
     if not response or 'AuthorizedUrl' not in response:
         # app is invalid
-        # or KDA app is not running
+        # or MSF app is not running
         responseString = "Unable to get pre signed url for app"
         raise Exception(responseString)
 

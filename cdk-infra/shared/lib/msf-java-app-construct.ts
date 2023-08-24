@@ -47,7 +47,7 @@ export class MsfJavaApp extends Construct {
         const fn = new lambda.SingletonFunction(this, 'MsfJavaAppCustomResourceHandler', {
             uuid: 'c4e1d42d-595a-4bd6-99e9-c299b61f2358',
             lambdaPurpose: "Deploy an MSF app created created with Java",
-            code: lambda.Code.fromInline(readFileSync(`${__dirname}/../../../python/kda_java_app_custom_resource_handler.py`, "utf-8")),
+            code: lambda.Code.fromInline(readFileSync(`${__dirname}/../../../python/msf_java_app_custom_resource_handler.py`, "utf-8")),
             handler: "index.handler",
             initialPolicy: [
                 new iam.PolicyStatement(

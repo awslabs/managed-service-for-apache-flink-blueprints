@@ -17,7 +17,7 @@ env_settings = EnvironmentSettings \
 s_env = StreamExecutionEnvironment.get_execution_environment()
 table_env = StreamTableEnvironment.create(s_env, environment_settings=env_settings)
 
-APPLICATION_PROPERTIES_FILE_PATH = "/etc/flink/application_properties.json"  # on kda
+APPLICATION_PROPERTIES_FILE_PATH = "/etc/flink/application_properties.json"  # on msf
 
 is_local = (
     # set this env var in your local environment

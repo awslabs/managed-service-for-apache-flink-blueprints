@@ -23,7 +23,7 @@ def handler(event, context):
 
         # set up env vars
         if event['RequestType'] == 'Create':
-            LOGGER.info('Creating KDA Java app')
+            LOGGER.info('Creating MSF Java app')
             create_app(client=client, props=props)
             cfnresponse.send(event, context, cfnresponse.SUCCESS, { "Message": "Successfully Created Application"})
         elif event['RequestType'] == 'Update':
@@ -52,7 +52,7 @@ def create_app(client, props):
 
     response = client.create_application(
         ApplicationName=props['AppName'],
-        ApplicationDescription="KDA blueprint Java application",
+        ApplicationDescription="MSF blueprint Java application",
         RuntimeEnvironment=props['RuntimeEnvironment'],
         ServiceExecutionRole=props['ServiceExecutionRole'],
         ApplicationConfiguration={

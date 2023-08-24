@@ -36,7 +36,7 @@ export interface CreateStudioAppProps extends StackProps {
   mskSG: ec2.SecurityGroup | undefined | null,
   logGroup: logs.LogGroup;
   logStream: logs.LogStream;
-  kdaAppName: string;
+  msfAppName: string;
   glueDatabaseName: string;
   serviceExecutionRole: string;
   RuntimeEnvironment: string;
@@ -73,14 +73,14 @@ export class CreateStudioApp extends Construct {
                         "kinesisanalytics:DescribeApplication",
                         "kinesisanalytics:StartApplication",
                         "kinesisanalytics:CreateApplication"],
-                        resources: ['arn:aws:kinesisanalytics:' + props.region + ':' + props.account + ':application/' + props.kdaAppName,
+                        resources: ['arn:aws:kinesisanalytics:' + props.region + ':' + props.account + ':application/' + props.msfAppName,
                                     props.serviceExecutionRole],
                         conditions: {
                             StringEqualsIfExists: {
                                 "iam:PassedToService": "kinesisanalytics.amazonaws.com",
                             },
                             ArnEqualsIfExists: {
-                                "iam:AssociatedResourceARN": "arn:aws:kinesisanalytics:" + props.region + ":" + props.account + ":application/" + props.kdaAppName
+                                "iam:AssociatedResourceARN": "arn:aws:kinesisanalytics:" + props.region + ":" + props.account + ":application/" + props.msfAppName
                             }
                         }
                     }),
@@ -90,7 +90,7 @@ export class CreateStudioApp extends Construct {
             runtime: lambda.Runtime.PYTHON_3_9,
             memorySize: 512,
             environment: {
-                app_name: props.kdaAppName,
+                app_name: props.msfAppName,
                 bootstrap_string: props.bootstrapString,
                 execution_role: props.serviceExecutionRole,
                 glue_db_arn: `arn:aws:glue:${props.region}:${props.account}:database/${props.glueDatabaseName}`,

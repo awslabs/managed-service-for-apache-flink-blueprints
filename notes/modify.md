@@ -51,8 +51,8 @@ export BucketName=<<YOUR ASSET BUCKET>>
 export BlueprintStackName=kds-to-s3-blueprint-${timestampToLetters}-stack
 export AppName=kds-to-s3-demo-${timestampToLetters}-app
 export StreamName=kds-to-s3-demo-${timestampToLetters}-stream
-export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
-export CloudWatchLogStreamName=kinesis-analytics-log-stream
+export CloudWatchLogGroupName=blueprints/managed-flink-analytics/${AppName}
+export CloudWatchLogStreamName=managed-flink-log-stream
 export RoleName=kds-to-s3-demo-${timestampToLetters}-role
 
 aws cloudformation create-stack --template-url https://${BucketName}.s3.amazonaws.com/kds-to-s3-datastream-java.json --stack-name $BlueprintStackName --parameters ParameterKey=AppName,ParameterValue=$AppName ParameterKey=CloudWatchLogGroupName,ParameterValue=$CloudWatchLogGroupName ParameterKey=CloudWatchLogStreamName,ParameterValue=$CloudWatchLogStreamName ParameterKey=StreamName,ParameterValue=$StreamName ParameterKey=BucketName,ParameterValue=$BucketName ParameterKey=RoleName,ParameterValue=$RoleName --capabilities CAPABILITY_NAMED_IAM

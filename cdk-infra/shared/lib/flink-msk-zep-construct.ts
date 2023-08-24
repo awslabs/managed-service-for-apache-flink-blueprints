@@ -35,7 +35,7 @@ export interface FlinkMSKZepContructProps extends StackProps {
   mskSG: ec2.SecurityGroup | undefined | null,
   logGroup: logs.LogGroup;
   logStream: logs.LogStream;
-  kdaAppName: string;
+  msfAppName: string;
   glueDatabaseName: string;
   serviceExecutionRole: string;
   RuntimeEnvironment: string;
@@ -61,7 +61,7 @@ export class FlinkMSKZepContstruct extends Construct {
       mskSG: props.mskSG,
       logGroup: props.logGroup,
       logStream: props.logStream,
-      kdaAppName: props.kdaAppName,
+      msfAppName: props.msfAppName,
       glueDatabaseName: props.glueDatabaseName,
       serviceExecutionRole: props.serviceExecutionRole,
       RuntimeEnvironment: props.RuntimeEnvironment,
@@ -94,14 +94,14 @@ export class FlinkMSKZepContstruct extends Construct {
     const appStartLambdaFnConstruct = new AppStartLambdaConstruct(this, 'AppStartFunction', {
       account: props.account!,
       region: props.region!,
-      appName: props.kdaAppName
+      appName: props.msfAppName
     });
 
     const appStartResource = new cdk.CustomResource(this, 'AppStartLambdaResource', {
       serviceToken: appStartLambdaFnConstruct.appStartLambdaFn.functionArn,
       properties:
       {
-        AppName: props.kdaAppName,
+        AppName: props.msfAppName,
       }
     });
 
@@ -127,7 +127,7 @@ export class FlinkMSKZepContstruct extends Construct {
       region: props.region!,
       codeBucket: props.runZepNotebookAssetBucket,
       codeKey: props.runZepNotebookAssetKey,
-      appName: props.kdaAppName
+      appName: props.msfAppName
     })
 
     const zeppelinNoteRunResource = new cdk.CustomResource(this, 'ZeppelinNoteRunLambdaResource', {

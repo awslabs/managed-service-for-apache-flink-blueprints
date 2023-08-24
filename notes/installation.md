@@ -57,7 +57,7 @@ NOTE: If `npm update` doesn't actually update your dependency versions, you migh
 - Then clone this repo using the command shown below.
 
 ```
-git clone https://github.com/aws-samples/amazon-kinesis-data-analytics-blueprints
+git clone https://github.com/awslabs/managed-service-for-apache-flink-blueprints
 ```
 - Open a terminal session and navigate to the [blueprint](/README.md#get-started-with-blueprints) of your choice within the project structure; once there, follow the blueprint specific instructions.
 

@@ -28,7 +28,7 @@ const app = new cdk.App();
 //       expect there to be a pre-existing bucket. You can modify this stack
 //       to also create a bucket instead.
 //       Same goes for the bucket that this app will be writing to.
-new CdkInfraKdsToS3Stack(app, 'CdkInfraKdaKdsToS3Stack', {
+new CdkInfraKdsToS3Stack(app, 'CdkInfraMSFKdsToS3Stack', {
   synthesizer: new BootstraplessStackSynthesizer({
     templateBucketName: 'cfn-template-bucket',
 

@@ -5,7 +5,7 @@ import cfnresponse
 import pytest
 from unittest.mock import MagicMock, patch
 
-import lambda_kda_app_start
+import lambda_msf_app_start
 
 
 @pytest.mark.parametrize("requestType, statuses, shouldStart, shouldSleep, cfnResponseStatus, cfnResponseMsg", [
@@ -38,7 +38,7 @@ import lambda_kda_app_start
     ("Update", ["RUNNING", "RUNNING"], False, False,
      cfnresponse.SUCCESS, "Resource updated"),
 ])
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -52,35 +52,35 @@ def test_handler_when_create_and_update(sleep, client, send, requestType, status
     }
     context = {}
 
-    kdaClient = MagicMock()
-    client.return_value = kdaClient
+    msfClient = MagicMock()
+    client.return_value = msfClient
 
-    kdaClient.describe_application.side_effect = [{
+    msfClient.describe_application.side_effect = [{
         "ApplicationDetail": {
             "ApplicationStatus": s
         }
     } for s in statuses]
 
-    kdaClient.describe_application.return_value = {
+    msfClient.describe_application.return_value = {
         "ApplicationDetail": {
             "ApplicationStatus": statuses[len(statuses) - 1]
         }
     }
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
-    kdaClient.describe_application.assert_called_with(ApplicationName="a")
+    msfClient.describe_application.assert_called_with(ApplicationName="a")
     if shouldStart:
-        kdaClient.start_application.assert_called_with(ApplicationName="a")
+        msfClient.start_application.assert_called_with(ApplicationName="a")
     if shouldSleep:
         sleep.assert_called_with(1)
     send.assert_called_with(event, context, cfnResponseStatus, {
                             "Message": cfnResponseMsg})
 
 
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -95,7 +95,7 @@ def test_handler_when_delete(sleep, client, send):
     context = {}
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
     client.assert_not_called()
@@ -104,7 +104,7 @@ def test_handler_when_delete(sleep, client, send):
                             "Message": "Resource deleted"})
 
 
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -119,7 +119,7 @@ def test_handler_when_request_type_is_not_known(sleep, client, send):
     context = {}
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
     client.assert_not_called()
@@ -133,7 +133,7 @@ def test_handler_when_request_type_is_not_known(sleep, client, send):
     ("Create", ["READY", Exception("failed")], True),
     ("Create", ["READY", "STARTING", Exception("failed")], True),
 ])
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -147,8 +147,8 @@ def test_handler_when_describe_application_fails(sleep, client, send, requestTyp
     }
     context = {}
 
-    kdaClient = MagicMock()
-    client.return_value = kdaClient
+    msfClient = MagicMock()
+    client.return_value = msfClient
 
     def t(s): return s if isinstance(s, Exception) else {
         "ApplicationDetail": {
@@ -156,19 +156,19 @@ def test_handler_when_describe_application_fails(sleep, client, send, requestTyp
         }
     }
 
-    kdaClient.describe_application.side_effect = [t(s) for s in statuses]
+    msfClient.describe_application.side_effect = [t(s) for s in statuses]
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
     if shouldStart:
-        kdaClient.start_application.assert_called_with(ApplicationName="a")
+        msfClient.start_application.assert_called_with(ApplicationName="a")
     send.assert_called_with(event, context, cfnresponse.FAILED, {
                             "Message": "failed"})
 
 
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -182,28 +182,28 @@ def test_handler_when_start_application_fails(sleep, client, send):
     }
     context = {}
 
-    kdaClient = MagicMock()
-    client.return_value = kdaClient
+    msfClient = MagicMock()
+    client.return_value = msfClient
 
-    kdaClient.describe_application.return_value = {
+    msfClient.describe_application.return_value = {
         "ApplicationDetail": {
             "ApplicationStatus": "READY"
         }
     }
 
-    kdaClient.start_application.side_effect = Exception("failed")
+    msfClient.start_application.side_effect = Exception("failed")
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
     send.assert_called_with(event, context, cfnresponse.FAILED, {
                             "Message": "failed"})
 
 
-@patch("lambda_kda_app_start.timeout_seconds", 2)
-@patch("lambda_kda_app_start.poll_interval_seconds", 10)
-@patch("lambda_kda_app_start.LOGGER", MagicMock())
+@patch("lambda_msf_app_start.timeout_seconds", 2)
+@patch("lambda_msf_app_start.poll_interval_seconds", 10)
+@patch("lambda_msf_app_start.LOGGER", MagicMock())
 @patch("cfnresponse.send")
 @patch("boto3.client")
 @patch("time.sleep")
@@ -217,17 +217,17 @@ def test_handler_when_times_out(sleep, client, send):
     }
     context = {}
 
-    kdaClient = MagicMock()
-    client.return_value = kdaClient
+    msfClient = MagicMock()
+    client.return_value = msfClient
 
-    kdaClient.describe_application.return_value = {
+    msfClient.describe_application.return_value = {
         "ApplicationDetail": {
             "ApplicationStatus": "STARTING"
         }
     }
 
     # Act
-    lambda_kda_app_start.handler(event, context)
+    lambda_msf_app_start.handler(event, context)
 
     # Assert
     send.assert_called_with(event, context, cfnresponse.FAILED, {

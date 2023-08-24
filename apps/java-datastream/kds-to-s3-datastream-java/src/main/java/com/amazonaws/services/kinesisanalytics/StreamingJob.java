@@ -140,7 +140,7 @@ public class StreamingJob {
 
 		Path path = new Path(outputPath);
 
-		String prefix = String.format("%sjob_start=%s/", "app-kda-kafka-to-s3", System.currentTimeMillis());
+		String prefix = String.format("%sjob_start=%s/", "app-msf-kafka-to-s3", System.currentTimeMillis());
 
 		final FileSink<Stock> sink = FileSink
 				.forBulkFormat(path, ParquetAvroWriters.forReflectRecord(Stock.class))
@@ -186,7 +186,7 @@ public class StreamingJob {
 		env.setRuntimeMode(RuntimeExecutionMode.STREAMING);
 
 		// Only for local
-		// Configure via KDA when running in cloud
+		// Configure via MSF when running in cloud
 		if(isLocal(env)) {
 			env.enableCheckpointing(2000);
 

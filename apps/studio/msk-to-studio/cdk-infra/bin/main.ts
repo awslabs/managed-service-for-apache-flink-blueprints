@@ -28,7 +28,7 @@ const app = new cdk.App();
 const studioAppName = app.node.tryGetContext('studioAppName');
 const glueDatabaseName = app.node.tryGetContext('glueDatabaseName');
 const RuntimeEnvironment = app.node.tryGetContext('RuntimeEnvironment');
-const kdaLogGroup = app.node.tryGetContext('kdaLogGroup');
+const msfLogGroup = app.node.tryGetContext('msfLogGroup');
 const studioLogStream = app.node.tryGetContext('studioLogStream');
 const mskClusterName = app.node.tryGetContext('mskClusterName');
 const SourceTopicName = app.node.tryGetContext('SourceTopicName');
@@ -49,7 +49,7 @@ new CdkInfraKafkaToStudioStack(app, 'CdkInfraKafkaToStudioStack', {
   studioAppName: studioAppName,
   glueDatabaseName: glueDatabaseName,
   RuntimeEnvironment: RuntimeEnvironment,
-  kdaLogGroup: kdaLogGroup,
+  msfLogGroup: msfLogGroup,
   studioLogStream: studioLogStream,
   mskClusterName: mskClusterName,
   SourceTopicName: SourceTopicName,

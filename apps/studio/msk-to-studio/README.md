@@ -15,14 +15,14 @@ This blueprint deploys a Studio app that reads from MSK Serverless using IAM aut
 
 ## High-level deployment steps
 
-1. Deploy associated infra (MSK and KDA Studio) using CDK script
+1. Deploy associated infra (MSK and MSF Studio) using CDK script
 2. Run Studio query to read from MSK topic
 
 ## Prerequisites
 
 1. Maven
 2. AWS SDK v2
-2. AWS CDK v2 - for deploying associated infra (MSK and KDA app)
+2. AWS CDK v2 - for deploying associated infra (MSK and MSF app)
 
 ## Step-by-step deployment walkthrough
 
@@ -33,9 +33,9 @@ export AWS_PROFILE=<<profile-name>>
 export APP_NAME=<<name-of-your-app>>
 ```
 
-2. Follow instructions in the [`cdk-infra`](cdk-infra/README.md) folder to *deploy* the infrastructure associated with this app - such as MSK Serverless and the Kinesis Data Analytics Studio application.
+2. Follow instructions in the [`cdk-infra`](cdk-infra/README.md) folder to *deploy* the infrastructure associated with this app - such as MSK Serverless and the Managed Service for Apache Flink Studio application.
 
-3. Start your Kinesis Data Analytics Studio application from the AWS console.
+3. Start your Managed Service for Apache Flink Studio application from the AWS console.
 
 4. Run Flink SQL query in Studio notebook to read from MSK topic.
 
@@ -59,8 +59,8 @@ export BlueprintStackName=studio-demo-msk-studio-blueprint-${timestampToLetters}
 export AppName=studio-demo-${timestampToLetters}-app
 export ClusterName=studio-demo-${timestampToLetters}-cluster
 export GlueDatabaseName=studio_demo_${timestampToLetters}_db
-export CloudWatchLogGroupName=blueprints/kinesis-analytics/${AppName}
-export CloudWatchLogStreamName=kinesis-analytics-log-stream
+export CloudWatchLogGroupName=blueprints/managed-flink/${AppName}
+export CloudWatchLogStreamName=managed-flink-log-stream
 export RoleName=studio-demo-${timestampToLetters}-role
 export RuntimeEnvironment=ZEPPELIN-FLINK-3_0
 

@@ -26,14 +26,14 @@ import * as cdk from 'aws-cdk-lib';
 import { aws_logs as logs } from "aws-cdk-lib";
 import { AppStartLambdaConstruct } from "./app-start-lambda-construct";
 
-export interface KDAZepContructProps extends StackProps {
+export interface MSFZepContructProps extends StackProps {
   account?: string;
   region?: string;
   vpc: ec2.Vpc | undefined | null,
   mskSG: ec2.SecurityGroup | undefined | null,
   logGroup: logs.LogGroup;
   logStream: logs.LogStream;
-  kdaAppName: string;
+  msfAppName: string;
   glueDatabaseName: string;
   runtimeEnvironment: string;
   serviceExecutionRole: string;
@@ -41,12 +41,12 @@ export interface KDAZepContructProps extends StackProps {
   codeContent: string;
 }
 
-export class KDAZepConstruct extends Construct {
+export class MSFZepConstruct extends Construct {
   public cfnApplicationProps: kinesisanalyticsv2.CfnApplicationProps;
-  public kdaZepApp: kinesisanalyticsv2.CfnApplication;
+  public msfZepApp: kinesisanalyticsv2.CfnApplication;
   public cwlogsOption: kinesisanalyticsv2.CfnApplicationCloudWatchLoggingOption;
 
-  constructor(scope: Construct, id: string, props: KDAZepContructProps) {
+  constructor(scope: Construct, id: string, props: MSFZepContructProps) {
     super(scope, id);
 
     let vpcConfigurations = undefined as IResolvable | (IResolvable | kinesisanalyticsv2.CfnApplication.VpcConfigurationProperty)[] | undefined;
@@ -68,9 +68,9 @@ export class KDAZepConstruct extends Construct {
 
       // TODO: clearly enumerate list of permissions
       // that this role needs. For instance, for deploying in VPC
-      // the KDA app needs VPC read access
+      // the MSF app needs VPC read access
       serviceExecutionRole: props.serviceExecutionRole,
-      applicationName: props.kdaAppName,
+      applicationName: props.msfAppName,
       applicationMode: "INTERACTIVE",
 
       applicationConfiguration: {
@@ -129,9 +129,9 @@ export class KDAZepConstruct extends Construct {
     };
 
     // application
-    this.kdaZepApp = new kinesisanalyticsv2.CfnApplication(
+    this.msfZepApp = new kinesisanalyticsv2.CfnApplication(
       this,
-      "KDAZepApp",
+      "MSFZepApp",
       this.cfnApplicationProps
     );
 
@@ -145,35 +145,35 @@ export class KDAZepConstruct extends Construct {
     this.cwlogsOption =
       new kinesisanalyticsv2.CfnApplicationCloudWatchLoggingOption(
         this,
-        "KDAZepCWLogs",
+        "MSFZepCWLogs",
         {
-          applicationName: props.kdaAppName,
+          applicationName: props.msfAppName,
           cloudWatchLoggingOption: {
             logStreamArn: logStreamArn,
           },
         }
       );
 
-    this.cwlogsOption.addDependency(this.kdaZepApp);
+    this.cwlogsOption.addDependency(this.msfZepApp);
 
 
     
     const appStartLambdaFnConstruct = new AppStartLambdaConstruct(this, 'AppStartLambda', {
       account: props.account!,
       region: props.region!,
-      appName: props.kdaAppName,
+      appName: props.msfAppName,
     });
 
     const resource = new cdk.CustomResource(this, 'AppStartLambdaResource', {
       serviceToken: appStartLambdaFnConstruct.appStartLambdaFn.functionArn,
       properties:
       {
-        AppName: props.kdaAppName,
+        AppName: props.msfAppName,
       }
     });
 
     resource.node.addDependency(appStartLambdaFnConstruct.appStartLambdaFn);
-    resource.node.addDependency(this.kdaZepApp);
+    resource.node.addDependency(this.msfZepApp);
     resource.node.addDependency(this.cwlogsOption);
 
     // 👇 create an output for app start response
