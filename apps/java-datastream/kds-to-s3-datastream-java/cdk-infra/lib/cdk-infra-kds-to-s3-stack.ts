@@ -136,7 +136,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
       region: this.region,
       partition: this.partition,
       appName: cfnParams.get("AppName")!.valueAsString,
-      runtimeEnvironment: MsfRuntimeEnvironment.FLINK_1_15,
+      runtimeEnvironment: MsfRuntimeEnvironment.FLINK_1_18,
       serviceExecutionRole: appRole.roleArn,
       bucketName: cfnParams.get("BucketName")!.valueAsString,
       jarFile: cfnParams.get("JarFile")!.valueAsString,
