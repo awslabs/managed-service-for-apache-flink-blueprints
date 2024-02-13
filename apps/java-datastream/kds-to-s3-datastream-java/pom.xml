@@ -29,7 +29,7 @@ under the License.
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<flink.version>1.15.4</flink.version>
+		<flink.version>1.18.0</flink.version>
 		<target.java.version>1.11</target.java.version>
 		<jdk.version>11</jdk.version>
 		<scala.binary.version>2.12</scala.binary.version>
@@ -117,7 +117,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kinesis</artifactId>
-			<version>${flink.version}</version>
+			<version>1.15.2</version>
 		</dependency>
 
 		<dependency>
