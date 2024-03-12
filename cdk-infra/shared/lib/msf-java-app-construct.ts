@@ -19,7 +19,7 @@ export interface MsfJavaAppProps extends StackProps {
     region: string;
     partition: string;
     appName: string;
-    runtimeEnvironment: MsfRuntimeEnvironment,
+    runtimeEnvironment: string,
     serviceExecutionRole: string;
     bucketName: string;
     jarFile: string;

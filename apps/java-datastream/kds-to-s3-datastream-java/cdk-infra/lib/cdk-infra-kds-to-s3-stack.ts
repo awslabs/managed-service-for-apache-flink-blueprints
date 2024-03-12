@@ -136,7 +136,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
       region: this.region,
       partition: this.partition,
       appName: cfnParams.get("AppName")!.valueAsString,
-      runtimeEnvironment: MsfRuntimeEnvironment.FLINK_1_18,
+      runtimeEnvironment: cfnParams.get("RuntimeEnvironment")!.valueAsString,
       serviceExecutionRole: appRole.roleArn,
       bucketName: cfnParams.get("BucketName")!.valueAsString,
       jarFile: cfnParams.get("JarFile")!.valueAsString,
@@ -225,7 +225,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
 
     params.set("RuntimeEnvironment", new cdk.CfnParameter(this, "RuntimeEnvironment", {
       type: "String",
-      default: "FLINK-1_15",
+      default: MsfRuntimeEnvironment.FLINK_1_18.toString(),
       description: "Flink runtime environment"
     }));
 
