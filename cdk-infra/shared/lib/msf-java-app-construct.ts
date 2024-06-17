@@ -10,6 +10,7 @@ export enum MsfRuntimeEnvironment {
     FLINK_1_13 = "FLINK-1_13",
     FLINK_1_15 = "FLINK-1_15",
     FLINK_1_18 = "FLINK-1_18",
+    FLINK_1_19 = "FLINK-1_19",
     FLINK_1_6 = "FLINK-1_6",
     FLINK_1_8 = "FLINK-1_8",
 

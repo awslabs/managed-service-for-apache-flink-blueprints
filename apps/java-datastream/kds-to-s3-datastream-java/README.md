@@ -6,7 +6,7 @@ This blueprint deploys a MSF app that reads from Kinesis Data Streams (KDS) usin
 
 ## Project details
 
-1. Flink version: `1.15.2`
+1. Flink version: `1.19.0`
 2. Java version: `11`
 
 ## Key components used
