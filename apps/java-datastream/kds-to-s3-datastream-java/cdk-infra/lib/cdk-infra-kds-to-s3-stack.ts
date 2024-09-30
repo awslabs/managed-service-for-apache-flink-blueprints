@@ -225,7 +225,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
 
     params.set("RuntimeEnvironment", new cdk.CfnParameter(this, "RuntimeEnvironment", {
       type: "String",
-      default: MsfRuntimeEnvironment.FLINK_1_19.toString(),
+      default: MsfRuntimeEnvironment.FLINK_1_20.toString(),
       description: "Flink runtime environment"
     }));
 
