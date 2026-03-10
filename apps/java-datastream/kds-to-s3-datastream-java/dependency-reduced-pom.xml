@@ -115,36 +115,47 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-runtime-web</artifactId>
+      <version>2.2.0</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>flink-clients</artifactId>
+          <groupId>org.apache.flink</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
-      <version>2.17.1</version>
+      <version>2.25.3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.17.1</version>
+      <version>2.25.3</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.17.1</version>
+      <version>2.25.3</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
   <properties>
-    <flink.format.parquet.version>1.12.2</flink.format.parquet.version>
     <maven.compiler.source>17</maven.compiler.source>
-    <jackson.databind.version>2.13.4.2</jackson.databind.version>
-    <jackson.version>2.13.4</jackson.version>
+    <jackson.databind.version>2.18.2</jackson.databind.version>
+    <parquet.version>1.15.2</parquet.version>
+    <jackson.version>2.18.2</jackson.version>
     <flink.version>2.2.0</flink.version>
-    <kafka.clients.version>2.4.1</kafka.clients.version>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <log4j.version>2.17.1</log4j.version>
-    <avro.version>1.9.2</avro.version>
-    <kda.connectors.version>2.0.0</kda.connectors.version>
+    <log4j.version>2.25.3</log4j.version>
+    <avro.version>1.12.0</avro.version>
+    <kda.connectors.version>2.1.0</kda.connectors.version>
     <target.java.version>17</target.java.version>
     <jdk.version>17</jdk.version>
     <kda.runtime.version>1.2.0</kda.runtime.version>
