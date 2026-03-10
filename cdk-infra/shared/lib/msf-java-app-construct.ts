@@ -14,6 +14,7 @@ export enum MsfRuntimeEnvironment {
     FLINK_1_6 = "FLINK-1_6",
     FLINK_1_8 = "FLINK-1_8",
     FLINK_1_20 = "FLINK-1_20",
+    FLINK_2_2 = "FLINK-2_2",
 
 }
 export interface MsfJavaAppProps extends StackProps {

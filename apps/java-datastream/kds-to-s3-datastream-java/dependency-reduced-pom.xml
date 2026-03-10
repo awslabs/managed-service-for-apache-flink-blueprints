@@ -134,20 +134,19 @@
     </dependency>
   </dependencies>
   <properties>
-    <scala.binary.version>2.12</scala.binary.version>
     <flink.format.parquet.version>1.12.2</flink.format.parquet.version>
-    <maven.compiler.source>1.11</maven.compiler.source>
+    <maven.compiler.source>17</maven.compiler.source>
     <jackson.databind.version>2.13.4.2</jackson.databind.version>
     <jackson.version>2.13.4</jackson.version>
-    <flink.version>1.15.4</flink.version>
+    <flink.version>2.2.0</flink.version>
     <kafka.clients.version>2.4.1</kafka.clients.version>
-    <maven.compiler.target>1.11</maven.compiler.target>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <avro.version>1.9.2</avro.version>
     <log4j.version>2.17.1</log4j.version>
+    <avro.version>1.9.2</avro.version>
     <kda.connectors.version>2.0.0</kda.connectors.version>
-    <target.java.version>1.11</target.java.version>
-    <jdk.version>11</jdk.version>
+    <target.java.version>17</target.java.version>
+    <jdk.version>17</jdk.version>
     <kda.runtime.version>1.2.0</kda.runtime.version>
   </properties>
 </project>

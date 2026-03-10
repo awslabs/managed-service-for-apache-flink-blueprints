@@ -23,23 +23,26 @@ import com.amazonaws.services.kinesisanalytics.stock.Stock;
 import com.amazonaws.services.kinesisanalytics.stock.StockDateBucketAssigner;
 import com.amazonaws.services.kinesisanalytics.stock.StockDeserializationSchema;
 import org.apache.flink.api.common.RuntimeExecutionMode;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.connector.aws.config.AWSConfigOptions;
 import org.apache.flink.connector.file.sink.FileSink;
+import org.apache.flink.connector.kinesis.source.KinesisStreamsSource;
+import org.apache.flink.connector.kinesis.source.config.KinesisSourceConfigOptions;
 import org.apache.flink.core.fs.Path;
-import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
+import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
-import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
-import org.apache.flink.streaming.connectors.kinesis.config.AWSConfigConstants;
-import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Properties;
 
@@ -98,7 +101,7 @@ public class StreamingJob {
 		return env instanceof LocalStreamEnvironment;
 	}
 
-	private static FlinkKinesisConsumer<Stock> getKinesisSource(StreamExecutionEnvironment env,
+	private static KinesisStreamsSource<Stock> getKinesisSource(StreamExecutionEnvironment env,
 																Properties appProperties) {
 
 		String streamName = "myKinesisStream";
@@ -111,18 +114,24 @@ public class StreamingJob {
 			streamInitPos = appProperties.get(STREAM_INITIAL_POSITION).toString();
 		}
 
-		Properties consumerConfig = new Properties();
-		consumerConfig.put(AWSConfigConstants.AWS_REGION, regionStr);
-		consumerConfig.put(ConsumerConfigConstants.STREAM_INITIAL_POSITION, streamInitPos);
-		// Default is POLLING, but we're specifying it explicitly here.
-		consumerConfig.put(ConsumerConfigConstants.RECORD_PUBLISHER_TYPE,
-						   ConsumerConfigConstants.RecordPublisherType.POLLING.name());
+		Configuration sourceConfig = new Configuration();
+		sourceConfig.set(AWSConfigOptions.AWS_REGION_OPTION, regionStr);
 
-		DeserializationSchema<Stock> deserializationSchema = new StockDeserializationSchema();
+		KinesisSourceConfigOptions.InitialPosition initialPosition =
+				KinesisSourceConfigOptions.InitialPosition.valueOf(streamInitPos);
+		sourceConfig.set(KinesisSourceConfigOptions.STREAM_INITIAL_POSITION, initialPosition);
 
-		FlinkKinesisConsumer<Stock> kinesisStockSource = new FlinkKinesisConsumer<>(streamName,
-																					deserializationSchema,
-																					consumerConfig);
+		String streamArn = String.format("arn:aws:kinesis:%s:%s:stream/%s",
+				regionStr,
+				isLocal(env) ? "000000000000" : appProperties.getOrDefault("AccountId", "000000000000").toString(),
+				streamName);
+
+		KinesisStreamsSource<Stock> kinesisStockSource = KinesisStreamsSource.<Stock>builder()
+				.setStreamArn(streamArn)
+				.setSourceConfig(sourceConfig)
+				.setDeserializationSchema(new StockDeserializationSchema())
+				.build();
+
 		return kinesisStockSource;
 	}
 
@@ -143,7 +152,7 @@ public class StreamingJob {
 		String prefix = String.format("%sjob_start=%s/", "app-msf-kafka-to-s3", System.currentTimeMillis());
 
 		final FileSink<Stock> sink = FileSink
-				.forBulkFormat(path, ParquetAvroWriters.forReflectRecord(Stock.class))
+				.forBulkFormat(path, AvroParquetWriters.forReflectRecord(Stock.class))
 				.withBucketAssigner(new StockDateBucketAssigner(partitionFormat, prefix))
 				.withRollingPolicy(OnCheckpointRollingPolicy.build())
 				.build();
@@ -154,8 +163,11 @@ public class StreamingJob {
 	private static void runAppWithKinesisSource(StreamExecutionEnvironment env,
 												Properties appProperties) {
 		// Source
-		FlinkKinesisConsumer<Stock> stockSource = getKinesisSource(env, appProperties);
-		DataStream<Stock> stockStream = env.addSource(stockSource, "Kinesis source");
+		KinesisStreamsSource<Stock> stockSource = getKinesisSource(env, appProperties);
+		DataStream<Stock> stockStream = env.fromSource(stockSource,
+				WatermarkStrategy.<Stock>forMonotonousTimestamps().withIdleness(Duration.ofSeconds(1)),
+				"Kinesis source")
+				.returns(TypeInformation.of(Stock.class));
 
 		// Do your processing here.
 		// We've included a simple transform, but you can replace this with your own
