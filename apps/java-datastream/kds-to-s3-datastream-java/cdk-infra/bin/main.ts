@@ -28,12 +28,15 @@ const app = new cdk.App();
 //       expect there to be a pre-existing bucket. You can modify this stack
 //       to also create a bucket instead.
 //       Same goes for the bucket that this app will be writing to.
-new CdkInfraKdsToS3Stack(app, 'CdkInfraMSFKdsToS3Stack', {
-  synthesizer: new BootstraplessStackSynthesizer({
-    templateBucketName: 'cfn-template-bucket',
+const useCdkDeploy = process.env.CDK_DIRECT_DEPLOY === 'true';
 
-    fileAssetBucketName: 'file-asset-bucket-${AWS::Region}',
-    fileAssetRegionSet: ['us-west-1', 'us-west-2'],
-    fileAssetPrefix: 'file-asset-prefix/latest/'
+new CdkInfraKdsToS3Stack(app, 'CdkInfraMSFKdsToS3Stack', {
+  ...(!useCdkDeploy && {
+    synthesizer: new BootstraplessStackSynthesizer({
+      templateBucketName: 'cfn-template-bucket',
+      fileAssetBucketName: 'file-asset-bucket-${AWS::Region}',
+      fileAssetRegionSet: ['us-west-1', 'us-west-2'],
+      fileAssetPrefix: 'file-asset-prefix/latest/'
+    }),
   }),
 });
