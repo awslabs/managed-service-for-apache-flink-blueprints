@@ -22,7 +22,7 @@ Open up `cdk.json` and fill in appropriate values for each of these CDK context 
 | `msfAppName` | The name of the Managed Service for Apache Flink application | MSF app *will be created* |
 | `appBucket` | The S3 bucket where the application payload will be stored | *Must be pre-existing* |
 | `appSinkBucket` | The bucket to which the MSK to S3 Flink app will write output files (in Parquet) | *Must be pre-existing* |
-| `runtimeEnvironment` | The Managed Service for Apache Flink runtime environment | For instance, `FLINK-1_15` |
+| `runtimeEnvironment` | The Managed Service for Apache Flink runtime environment | For instance, `FLINK-2_2` |
 | `deployDataGen` | `true` if you want Zeppelin-based interactive MSF for data generation to be deployed; `false` otherwise | N/A |
 | `glueDatabaseName` | The AWS Glue database that will be used by MSF Studio datagen app | *Must be pre-existing* |
 | `msfLogGroup` | The name for the CloudWatch Log Group that will be linked to the MSF Flink app | Log group *will be created* |

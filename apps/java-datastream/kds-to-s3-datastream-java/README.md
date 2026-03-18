@@ -11,7 +11,7 @@ This blueprint deploys a MSF app that reads from Kinesis Data Streams (KDS) usin
 
 ## Key components used
 
-1. `FlinkKinesisConsumer`.
+1. `KinesisStreamsSource`.
 2. `FileSink` (`StreamingFileSink` is slated to be deprecated).
 
 ## High-level deployment steps
