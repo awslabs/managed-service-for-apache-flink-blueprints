@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.85.0",
-    "constructs": "10.2.4",
+    "constructs": "^10.5.0",
     "source-map-support": "0.5.21",
     "cdk-bootstrapless-synthesizer": "^2.3.2"
 
