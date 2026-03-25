@@ -29,20 +29,18 @@ under the License.
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<flink.version>1.20.0</flink.version>
-		<target.java.version>1.11</target.java.version>
-		<jdk.version>11</jdk.version>
-		<scala.binary.version>2.12</scala.binary.version>
-		<kda.connectors.version>2.0.0</kda.connectors.version>
+		<flink.version>2.2.0</flink.version>
+		<target.java.version>17</target.java.version>
+		<jdk.version>17</jdk.version>
+		<kda.connectors.version>2.1.0</kda.connectors.version>
 		<kda.runtime.version>1.2.0</kda.runtime.version>
-		<kafka.clients.version>2.4.1</kafka.clients.version>
-		<avro.version>1.9.2</avro.version>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
-		<log4j.version>2.17.1</log4j.version>
-		<jackson.databind.version>2.13.4.2</jackson.databind.version>
-		<jackson.version>2.13.4</jackson.version>
-		<flink.format.parquet.version>1.12.2</flink.format.parquet.version>
+		<avro.version>1.12.0</avro.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<log4j.version>2.25.3</log4j.version>
+		<jackson.databind.version>2.18.2</jackson.databind.version>
+		<jackson.version>2.18.2</jackson.version>
+		<parquet.version>1.15.2</parquet.version>
 	</properties>
 
 	<repositories>
@@ -64,17 +62,7 @@ under the License.
 		<!-- These dependencies are provided, because they should not be packaged into the JAR file. -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-java</artifactId>
-			<version>${flink.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-streaming-java</artifactId>
-			<version>${flink.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-clients</artifactId>
 			<version>${flink.version}</version>
 		</dependency>
 
@@ -116,8 +104,8 @@ under the License.
 
 		<dependency>
 			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-kinesis</artifactId>
-			<version>4.3.0-1.19</version>
+			<artifactId>flink-connector-aws-kinesis-streams</artifactId>
+			<version>6.0.0-2.0</version>
 		</dependency>
 
 		<dependency>
@@ -147,7 +135,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.parquet</groupId>
 			<artifactId>parquet-hadoop</artifactId>
-			<version>${flink.format.parquet.version}</version>
+			<version>${parquet.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.xerial.snappy</groupId>
@@ -159,7 +147,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-core</artifactId>
-			<version>3.2.4</version>
+			<version>3.4.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -171,7 +159,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.parquet</groupId>
 			<artifactId>parquet-avro</artifactId>
-			<version>${flink.format.parquet.version}</version>
+			<version>${parquet.version}</version>
 			<optional>true</optional>
 			<exclusions>
 				<exclusion>
@@ -189,6 +177,14 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-s3-fs-hadoop</artifactId>
 			<version>${flink.version}</version>
+		</dependency>
+
+		<!-- Flink runtime for local execution (mini-cluster) in IDE -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-runtime-web</artifactId>
+			<version>${flink.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->

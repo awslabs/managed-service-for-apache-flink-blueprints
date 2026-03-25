@@ -99,11 +99,16 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
         new iam.PolicyStatement({
           resources: [kinesisStream.streamArn],
           actions: ['kinesis:DescribeStream',
+                    'kinesis:DescribeStreamSummary',
                     'kinesis:GetShardIterator',
                     'kinesis:GetRecords',
                     'kinesis:PutRecord',
                     'kinesis:PutRecords',
-                    'kinesis:ListShards']
+                    'kinesis:ListShards',
+                    'kinesis:SubscribeToShard',
+                    'kinesis:RegisterStreamConsumer',
+                    'kinesis:DeregisterStreamConsumer',
+                    'kinesis:ListStreamConsumers']
         }),
       ],
     });
@@ -126,6 +131,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
       "StreamName": kinesisStream.streamName,
       "BucketName": `s3://${cfnParams.get("BucketName")!.valueAsString}/`,
       "AWSRegion": this.region,
+      "AccountId": this.account,
       "StreamInitialPosition": "TRIM_HORIZON",
       "PartitionFormat": "yyyy-MM-dd-HH",
       "BootstrapStackName": cfnParams.get("BootstrapStackName")!.valueAsString,
@@ -225,7 +231,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
 
     params.set("RuntimeEnvironment", new cdk.CfnParameter(this, "RuntimeEnvironment", {
       type: "String",
-      default: MsfRuntimeEnvironment.FLINK_1_20.toString(),
+      default: MsfRuntimeEnvironment.FLINK_2_2.toString(),
       description: "Flink runtime environment"
     }));
 
