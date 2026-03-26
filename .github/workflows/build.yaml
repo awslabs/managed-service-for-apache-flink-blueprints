@@ -60,7 +60,7 @@ jobs:
         working-directory:  bootstrap-cdk
         run: |
           npm install
-          cdk synth -j 2>/dev/null | grep -v '^[^{"]' > ../artifacts/BootstrapCdkStack.template.json
+          cdk synth -j 2>/dev/null | sed '/^[0-9]* feature flags/d' > ../artifacts/BootstrapCdkStack.template.json
 
       - name: Build kds-to-s3-datastream-java
         working-directory: apps/java-datastream/kds-to-s3-datastream-java
@@ -68,7 +68,7 @@ jobs:
           mvn package
           cd cdk-infra
           npm install
-          cdk synth -j 2>/dev/null | grep -v '^[^{"]' > ../target/kds-to-s3-datastream-java.json
+          cdk synth -j 2>/dev/null | sed '/^[0-9]* feature flags/d' > ../target/kds-to-s3-datastream-java.json
           cd ..
           cp target/kds-to-s3-datastream-java-1.0.1.jar ../../../artifacts/
           cp target/kds-to-s3-datastream-java.json ../../../artifacts/
@@ -77,7 +77,7 @@ jobs:
         run: |
           cd apps/studio/msk-to-studio/cdk-infra
           npm install
-          cdk synth -j 2>/dev/null | grep -v '^[^{"]' > ../../../../artifacts/CdkInfraKafkaToStudioStack.template.json
+          cdk synth -j 2>/dev/null | sed '/^[0-9]* feature flags/d' > ../../../../artifacts/CdkInfraKafkaToStudioStack.template.json
           cd ../../../..
           cd python/lambda_run_studio_notebook
           ./bundle-lambda-for-release.sh
