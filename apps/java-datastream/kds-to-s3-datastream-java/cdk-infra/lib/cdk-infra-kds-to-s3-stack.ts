@@ -237,7 +237,7 @@ export class CdkInfraKdsToS3Stack extends cdk.Stack {
 
     params.set("RetentionPeriodHours", new cdk.CfnParameter(this, "RetentionPeriodHours", {
       type: "Number",
-      default: 90 * 24,
+      default: 24,
       description: "Time to retain data in Kinesis Data Stream in hours"
     }));
 
