@@ -74,7 +74,7 @@ export class CdkInfraKafkaToStudioStack extends cdk.Stack {
       description: 'MSK Security Group'
     });
 
-    mskSG.connections.allowInternally(ec2.Port.allTraffic(), 'Allow all traffic between hosts having the same security group');
+    mskSG.addIngressRule(mskSG, ec2.Port.allTraffic(), 'Allow all traffic between hosts having the same security group');
 
     // create cw log group and log stream
     // so it can be used when creating msf app
